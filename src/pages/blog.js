@@ -1,70 +1,81 @@
-import React, { useCallback, useEffect, useState } from "react";
-import Peer from "peerjs";
-import Quill from "quill";
-import "quill/dist/quill.snow.css";
-import { v4 as uuidV4 } from "uuid";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-
-const TOOLBAR_OPTIONS = [
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
-  ["bold", "italic"],
-  ["blockquote", "code-block", "link"],
-  [{ list: "bullet" }, { list: "ordered" }],
-  ["image"],
-];
+import { usePeer } from "../context/peerContext";
+import { useQuill } from "../context/quillContext";
 
 export default function Blog() {
-  const { blogId } = useParams();
+  const { blogId, username } = useParams();
+  const { peer } = usePeer();
+  const { quill, quillWrapper, cursorModule } = useQuill();
 
-  const [quill, setQuill] = useState(null);
-  const [peer, setPeer] = useState(null);
   const [connections, setConnections] = useState([]);
 
   useEffect(() => {
-    const p = new Peer(uuidV4(), {
-      host: "192.168.43.24",
-      port: 5000,
-      path: "/peerjs",
-    });
-    setPeer(p);
-
-    return () => {
-      p.destroy();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (peer == null || quill == null) return;
+    if (peer == null || quill == null || !username || cursorModule == null)
+      return;
 
     peer.on("connection", (conn) => {
-      setConnections((prev) => [...prev, conn]);
-
       conn.on("data", (data) => {
+        const handleNewUser = () => {
+          conn.send({ type: "username", value: username });
+          setConnections((prev) => [
+            ...prev,
+            { username: data.value, connection: conn },
+          ]);
+          const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+          cursorModule.createCursor(conn.peer, data.value, `#${randomColor}`);
+        };
+
         switch (data.type) {
+          case "username":
+            return handleNewUser();
           case "delta":
-            return quill.updateContents(JSON.parse(data.value));
+            const handleDelta = () => {
+              quill.updateContents(JSON.parse(data.value));
+            };
+            return handleDelta();
+          case "range":
+            const handleRange = () => {
+              cursorModule.moveCursor(data.source, JSON.parse(data.value));
+            };
+            return handleRange();
           default:
             break;
         }
       });
     });
 
-    peer.on("error", (error) => {
-      console.log(error);
-    });
-
     const handleConnect = (peerToConnect) => {
-      if (peer == null) return;
-
       const conn = peer.connect(peerToConnect);
 
       conn.on("open", function () {
-        setConnections((prev) => [...prev, conn]);
+        conn.send({ type: "username", value: username });
 
         conn.on("data", (data) => {
+          const handleNewUser = () => {
+            setConnections((prev) => [
+              ...prev,
+              { username: data.value, connection: conn },
+            ]);
+            const randomColor = Math.floor(Math.random() * 16777215).toString(
+              16
+            );
+            cursorModule.createCursor(conn.peer, data.value, `#${randomColor}`);
+          };
+
           switch (data.type) {
+            case "username":
+              return handleNewUser();
             case "delta":
-              return quill.updateContents(JSON.parse(data.value));
+              const handleDelta = () => {
+                quill.updateContents(JSON.parse(data.value));
+              };
+              return handleDelta();
+            case "range":
+              const handleRange = () => {
+                cursorModule.moveCursor(data.source, JSON.parse(data.value));
+              };
+              return handleRange();
             default:
               break;
           }
@@ -83,56 +94,73 @@ export default function Blog() {
       },
       body: JSON.stringify({
         userId: peer.id,
+        username: username,
       }),
     })
       .then((res) => res.json())
-      .then((result) =>
+      .then((result) => {
         result.users.map((user) => {
-          if (user === peer.id) return null;
-          return handleConnect(user);
-        })
-      );
-  }, [peer, quill]);
+          if (user.userId === peer.id) return null;
+          return handleConnect(user.userId);
+        });
+      });
+
+    peer.on("error", (error) => {
+      console.log(error);
+    });
+  }, [peer, quill, username, cursorModule]);
 
   useEffect(() => {
     if (!connections.length || quill == null) return;
 
-    const handler = (delta, oldDelta, source) => {
+    const textHandler = (delta, oldDelta, source) => {
       if (source !== "user") return;
-      connections.map((connection) => {
-        return connection.send({ type: "delta", value: JSON.stringify(delta) });
+      connections.forEach((connection) => {
+        connection.connection.send({
+          type: "delta",
+          source: peer.id,
+          value: JSON.stringify(delta),
+        });
       });
     };
 
-    quill.on("text-change", handler);
+    const selectionHandler = (range, oldRange, source) => {
+      if (source !== "user") return;
+      connections.forEach((connection) => {
+        connection.connection.send({
+          type: "range",
+          source: peer.id,
+          value: JSON.stringify(range),
+        });
+      });
+    };
+
+    quill.on("editor-change", (eventName, ...args) => {
+      if (eventName === "text-change")
+        return textHandler(args[0], args[1], args[2]);
+      if (eventName === "selection-change")
+        return selectionHandler(args[0], args[1], args[2]);
+    });
 
     return () => {
-      quill.off("text-change");
+      quill.off("editor-change");
     };
-  }, [connections, quill]);
-
-  const wrapperRef = useCallback((wrapper) => {
-    if (wrapper == null) return;
-    wrapper.innerHTML = "";
-    const editor = document.createElement("div");
-    wrapper.append(editor);
-    const q = new Quill(editor, {
-      theme: "snow",
-      modules: { toolbar: TOOLBAR_OPTIONS },
-    });
-    setQuill(q);
-  }, []);
+  }, [connections, quill, peer]);
 
   return (
     <>
       <p className="blogId">Blog ID: {blogId}</p>
       <div className="wrapper">
-        <div className="container" ref={wrapperRef}></div>
+        <div className="container" ref={quillWrapper}></div>
         <div className="connections">
           {connections?.map((connection) => {
             return (
-              <p className="peer-id" key={connection.peer} id={connection.peer}>
-                Connected to {connection.peer}
+              <p
+                className="peer-id"
+                key={connection.connection.peer}
+                id={connection.connection.peer}
+              >
+                Connected to {connection.username}
               </p>
             );
           })}

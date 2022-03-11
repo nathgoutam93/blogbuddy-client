@@ -4,10 +4,11 @@ import { v4 as uuidV4 } from "uuid";
 
 export default function Home() {
   const navigator = useNavigate();
+  const [username, setUsername] = useState("");
   const [blogId, setBlogId] = useState("");
 
   const handleJoinBlog = () => {
-    navigator(`/blogs/${blogId}`);
+    navigator(`/blogs/${blogId}/${username}`);
   };
 
   const handleCreateBLog = () => {
@@ -15,7 +16,7 @@ export default function Home() {
 
     //TODO create a new blog document with this newBlogId in database
 
-    navigator(`/blogs/${newBlogId}`);
+    navigator(`/blogs/${newBlogId}/${username}`);
   };
 
   return (
@@ -24,13 +25,24 @@ export default function Home() {
         <div>
           <input
             type="text"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+            placeholder="username"
+          ></input>
+          <input
+            type="text"
             onChange={(e) => setBlogId(e.target.value)}
             value={blogId}
+            placeholder="Blog ID"
           ></input>
-          <button onClick={handleJoinBlog}>Join A Blog</button>
+          <button disabled={!username || !blogId} onClick={handleJoinBlog}>
+            Join A Blog
+          </button>
         </div>
         <div>
-          <button onClick={handleCreateBLog}>Create A Blog</button>
+          <button disabled={!username} onClick={handleCreateBLog}>
+            Create A Blog
+          </button>
         </div>
       </div>
     </div>
