@@ -21,6 +21,7 @@ export function PeerProvider({ children }) {
 
     return () => {
       p.destroy();
+      console.log("destroyed");
     };
   }, []);
 

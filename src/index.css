@@ -1,83 +1,26 @@
-*,
-*::after,
-*::before {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import url("https://fonts.googleapis.com/css2?family=Milonga&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=swap");
 
-body {
-  background-color: #f3f3f3;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-.blogId {
-  width: 100%;
-  padding: 1rem;
-  text-align: center;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: large;
-  color: #171717;
-}
+@layer base {
+  *,
+  *::before,
+  *::after {
+    @apply m-0 p-0 box-border;
+  }
 
-.wrapper {
-  width: 100%;
-  height: 90vh;
-  display: flex;
-  justify-content: center;
-}
+  .quill-wrapper {
+    @apply p-2 flex flex-col space-y-2 bg-gray-100 rounded-xl;
+  }
 
-.container {
-  width: 80%;
-  height: 100%;
-  padding: 1rem;
-}
+  .quill-wrapper .ql-toolbar.ql-snow {
+    @apply flex justify-center items-center bg-white rounded-xl border-none;
+  }
 
-.container .ql-toolbar.ql-snow {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.container .ql-container.ql-snow {
-  height: 100%;
-}
-
-.connections {
-  width: 20%;
-  height: 100%;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.connections .peer-connection {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.connections .peer-connection input {
-  width: 100%;
-  padding: 0.2rem;
-  color: #171717;
-}
-
-.connections .peer-connection button {
-  width: 100%;
-  color: #f3f3f3;
-  background-color: #171717;
-}
-
-.connections .your-id {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: medium;
-  color: #171717;
-}
-
-.connections .peer-id {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  font-size: small;
-  color: #171717;
+  .quill-wrapper .ql-container.ql-snow {
+    @apply h-screen border-none;
+  }
 }

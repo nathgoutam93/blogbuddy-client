@@ -17,11 +17,15 @@ export const useQuill = () => {
 };
 
 const TOOLBAR_OPTIONS = [
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
-  ["bold", "italic"],
-  ["blockquote", "code-block", "link"],
-  [{ list: "bullet" }, { list: "ordered" }],
-  ["image"],
+  { header: [1, 2, 3, 4, 5, 6, false] },
+  "bold",
+  "italic",
+  "blockquote",
+  "code-block",
+  "link",
+  { list: "bullet" },
+  { list: "ordered" },
+  "image",
 ];
 
 export function QuillProvider({ children }) {
