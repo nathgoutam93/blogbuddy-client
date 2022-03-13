@@ -3,14 +3,17 @@ import { useParams } from "react-router-dom";
 import { usePeer } from "../context/peerContext";
 import { useQuill } from "../context/quillContext";
 import { AiOutlineUserAdd, AiOutlineUser } from "react-icons/ai";
+import Video from "../components/video";
 
 export default function Blog() {
   const { blogId, username } = useParams();
   const { peer } = usePeer();
   const { quill, quillWrapper, cursorModule } = useQuill();
 
-  const [connections, setConnections] = useState({});
+  const [dataConnections, setDataConnections] = useState({});
+  const [mediaConnections, setMediaConnections] = useState({});
   const [showConnection, setShowConnection] = useState(false);
+  const [localStream, setLocalStream] = useState(null);
 
   useEffect(() => {
     if (peer == null || quill == null || !username || cursorModule == null)
@@ -21,15 +24,12 @@ export default function Blog() {
         let toggleFlagTimeout = 0;
 
         const handleNewUser = () => {
-          // close this connection if we already have a dataConnection with the peer
-          if (Object.keys(connections).includes(conn.peer)) conn.close();
-          //send username to the peer to complete connection process
+          //send username to the peer to complete connection process and add peer to connections
           conn.send({ type: "username", value: username });
-          //add the remote peer to the connections
-          setConnections((previousState) => {
+          setDataConnections((previousState) => {
             previousState[conn.peer] = {
               username: data.value,
-              connection: conn,
+              dataConnection: conn,
             };
             return { ...previousState };
           });
@@ -41,21 +41,21 @@ export default function Blog() {
         // replicate remote peer text changes
         const handleDelta = () => {
           quill.updateContents(JSON.parse(data.value));
-          cursorModule.toggleFlag(data.source, true);
+          cursorModule.toggleFlag(conn.peer, true);
           if (toggleFlagTimeout > 0) clearTimeout(toggleFlagTimeout);
           toggleFlagTimeout = setTimeout(
-            () => cursorModule.toggleFlag(data.source, false),
+            () => cursorModule.toggleFlag(conn.peer, false),
             3000
           );
         };
 
         // replicate remote peer text selection and cursor movement
         const handleRange = () => {
-          cursorModule.moveCursor(data.source, JSON.parse(data.value));
-          cursorModule.toggleFlag(data.source, true);
+          cursorModule.moveCursor(conn.peer, JSON.parse(data.value));
+          cursorModule.toggleFlag(conn.peer, true);
           if (toggleFlagTimeout > 0) clearTimeout(toggleFlagTimeout);
           toggleFlagTimeout = setTimeout(
-            () => cursorModule.toggleFlag(data.source, false),
+            () => cursorModule.toggleFlag(conn.peer, false),
             3000
           );
         };
@@ -75,8 +75,32 @@ export default function Blog() {
       //on dataConnection close remove the user from connection and the cursor associated with the peer
       conn.on("close", () => {
         cursorModule.removeCursor(conn.peer);
-        setConnections((previousState) => {
+        setMediaConnections((previousState) => {
           delete previousState[conn.peer];
+          return { ...previousState };
+        });
+        setDataConnections((previousState) => {
+          delete previousState[conn.peer];
+          return { ...previousState };
+        });
+      });
+    });
+
+    return () => peer.off("connection");
+  }, [peer, quill, cursorModule, username]);
+
+  useEffect(() => {
+    if (peer == null || localStream == null) return;
+
+    peer.on("call", function (call) {
+      call.answer(localStream);
+
+      call.on("stream", (stream) => {
+        setMediaConnections((previousState) => {
+          previousState[call.peer] = {
+            mediaConnection: call,
+            stream,
+          };
           return { ...previousState };
         });
       });
@@ -86,83 +110,103 @@ export default function Blog() {
       console.log(error);
     });
 
-    return () => peer.off("connection");
-  }, [peer, quill, cursorModule, username]);
+    return () => {
+      peer.off("call");
+      peer.off("error");
+    };
+  }, [peer, localStream]);
 
   useEffect(() => {
     if (peer == null || quill == null || !username || cursorModule == null)
       return;
 
     const handleConnect = (peerToConnect) => {
-      const conn = peer.connect(peerToConnect);
+      const conn = peer.connect(peerToConnect, { serialization: "json" });
+      const call = peer.call(peerToConnect, localStream);
 
       conn.on("open", function () {
         //initiate connection process with sending username
         conn.send({ type: "username", value: username });
+      });
 
-        conn.on("data", (data) => {
-          let toggleFlagTimeout = 0;
-
-          // add the peer to connections on connection complete
-          const handleNewUser = () => {
-            setConnections((previousState) => {
-              previousState[conn.peer] = {
-                username: data.value,
-                connection: conn,
-              };
-              return { ...previousState };
-            });
-            // create a new cursor and assign it to remote peeer
-            const randomColor = Math.floor(Math.random() * 16777215).toString(
-              16
-            );
-            cursorModule.createCursor(conn.peer, data.value, `#${randomColor}`);
+      call.on("stream", function (stream) {
+        setMediaConnections((previousState) => {
+          previousState[call.peer] = {
+            mediaConnection: call,
+            stream,
           };
-
-          // replicate remote peer text changes
-          const handleDelta = () => {
-            quill.updateContents(JSON.parse(data.value));
-            cursorModule.toggleFlag(data.source, true);
-            if (toggleFlagTimeout > 0) clearTimeout(toggleFlagTimeout);
-            toggleFlagTimeout = setTimeout(
-              () => cursorModule.toggleFlag(data.source, false),
-              3000
-            );
-          };
-
-          // replicate remote peer text selection and cursor movement
-          const handleRange = () => {
-            cursorModule.moveCursor(data.source, JSON.parse(data.value));
-            cursorModule.toggleFlag(data.source, true);
-            if (toggleFlagTimeout > 0) clearTimeout(toggleFlagTimeout);
-            toggleFlagTimeout = setTimeout(
-              () => cursorModule.toggleFlag(data.source, false),
-              3000
-            );
-          };
-
-          switch (data.type) {
-            case "username":
-              return handleNewUser();
-            case "delta":
-              return handleDelta();
-            case "range":
-              return handleRange();
-            default:
-              break;
-          }
+          return { ...previousState };
         });
+      });
+
+      conn.on("data", (data) => {
+        let toggleFlagTimeout = 0;
+
+        // add the peer to connections on connection complete
+        const handleNewUser = () => {
+          setDataConnections((previousState) => {
+            previousState[conn.peer] = {
+              username: data.value,
+              dataConnection: conn,
+            };
+            return { ...previousState };
+          });
+          // create a new cursor and assign it to remote peeer
+          const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+          cursorModule.createCursor(conn.peer, data.value, `#${randomColor}`);
+        };
+
+        // replicate remote peer text changes
+        const handleDelta = () => {
+          quill.updateContents(JSON.parse(data.value));
+          cursorModule.toggleFlag(conn.peer, true);
+          if (toggleFlagTimeout > 0) clearTimeout(toggleFlagTimeout);
+          toggleFlagTimeout = setTimeout(
+            () => cursorModule.toggleFlag(conn.peer, false),
+            3000
+          );
+        };
+
+        // replicate remote peer text selection and cursor movement
+        const handleRange = () => {
+          cursorModule.moveCursor(conn.peer, JSON.parse(data.value));
+          cursorModule.toggleFlag(conn.peer, true);
+          if (toggleFlagTimeout > 0) clearTimeout(toggleFlagTimeout);
+          toggleFlagTimeout = setTimeout(
+            () => cursorModule.toggleFlag(conn.peer, false),
+            3000
+          );
+        };
+
+        switch (data.type) {
+          case "username":
+            return handleNewUser();
+          case "delta":
+            return handleDelta();
+          case "range":
+            return handleRange();
+          default:
+            break;
+        }
       });
 
       // remove the peer from connections if dataConnection got close
       conn.on("close", () => {
-        setConnections((previousState) => {
+        setMediaConnections((previousState) => {
+          delete previousState[conn.peer];
+          return { ...previousState };
+        });
+        setDataConnections((previousState) => {
           delete previousState[conn.peer];
           return { ...previousState };
         });
       });
 
       conn.on("error", (error) => {
+        console.log(error);
+      });
+
+      call.on("error", (error) => {
         console.log(error);
       });
     };
@@ -182,22 +226,20 @@ export default function Blog() {
       .then((result) => {
         Object.entries(result.users).forEach(([key, value]) => {
           if (key === peer.id) return;
-          if (Object.keys(connections).includes(key)) return;
           handleConnect(value.userId);
         });
       });
-  }, [peer, quill, username, cursorModule]);
+  }, [peer, quill, username, cursorModule, localStream]);
 
   useEffect(() => {
-    if (Object.keys(connections).length < 0 || quill == null) return;
+    if (Object.keys(dataConnections).length < 0 || quill == null) return;
 
     // send text changes to all the connected peers
     const textHandler = (delta, _, source) => {
       if (source !== "user") return;
-      Object.entries(connections).map(([key, value]) => {
-        return value.connection.send({
+      Object.entries(dataConnections).forEach(([_, value]) => {
+        value.dataConnection.send({
           type: "delta",
-          source: peer.id,
           value: JSON.stringify(delta),
         });
       });
@@ -206,10 +248,9 @@ export default function Blog() {
     // send text selection to all the connected peers
     const selectionHandler = (range, _, source) => {
       if (source !== "user") return;
-      Object.entries(connections).map(([_, value]) => {
-        return value.connection.send({
+      Object.entries(dataConnections).forEach(([_, value]) => {
+        value.dataConnection.send({
           type: "range",
-          source: peer.id,
           value: JSON.stringify(range),
         });
       });
@@ -226,53 +267,85 @@ export default function Blog() {
     return () => {
       quill.off("editor-change");
     };
-  }, [connections, quill, peer]);
+  }, [dataConnections, quill, peer]);
+
+  useEffect(() => {
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((mediaStream) => {
+        setLocalStream(mediaStream);
+      });
+  }, []);
 
   return (
-    <div className="p-4 w-full min-h-screen grid grid-cols-4 font-nunito bg-gradient-to-tr from-blue-400 to-blue-200">
-      <div className="wrapper col-span-4 lg:col-span-3 space-y-2">
-        <header className="p-2 px-4 flex justify-between items-center bg-white rounded-xl">
-          <h1 className="text-2xl font-bold font-milonga text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-teal-900">
-            BlogBuddy
-          </h1>
-          <div
-            onClick={() => setShowConnection(!showConnection)}
-            className="relative p-1 pr-2 flex justify-center items-center bg-teal-400 rounded-full space-x-2 cursor-pointer"
-          >
-            <AiOutlineUser size={24} className="bg-white rounded-full" />
-            <span className="text-white text-lg font-bold">
-              {Object.keys(connections).length + 1}
-            </span>
-            {showConnection && (
-              <div className="absolute top-full translate-y-4 left-full -translate-x-full p-2 flex flex-col bg-teal-400 rounded-xl space-y-2 z-50">
-                <p
-                  className="p-2 text-lg text-gray-800 bg-white rounded-xl cursor-pointer"
-                  key={username}
-                >
-                  {username}
-                </p>
-                {Object.entries(connections).map(([key, value]) => {
-                  return (
-                    <p
-                      className="p-2 text-lg text-gray-800 bg-white rounded-xl cursor-pointer"
-                      key={key}
-                    >
-                      {value.username}
-                    </p>
-                  );
-                })}
-                <AiOutlineUserAdd
-                  size={32}
-                  onClick={() => navigator.clipboard.writeText(blogId)}
-                  className="p-2 bg-white rounded-xl cursor-pointer"
-                />
-              </div>
-            )}
-          </div>
-        </header>
-        <div className="quill-wrapper" ref={quillWrapper}></div>
+    <div className="p-4 w-full min-h-screen font-nunito bg-gradient-to-tr from-blue-400 to-blue-200">
+      <header className="p-2 px-4 flex justify-between items-center bg-white rounded-xl">
+        <h1 className="text-2xl font-bold font-milonga text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-teal-900">
+          BlogBuddy
+        </h1>
+        <div
+          onClick={() => setShowConnection(!showConnection)}
+          className="relative p-1 pr-2 flex justify-center items-center bg-teal-400 rounded-full space-x-2 cursor-pointer"
+        >
+          <AiOutlineUser size={24} className="bg-white rounded-full" />
+          <span className="text-white text-lg font-bold">
+            {Object.keys(dataConnections).length + 1}
+          </span>
+          {showConnection && (
+            <div className="absolute top-full translate-y-4 left-full -translate-x-full p-2 flex flex-col bg-teal-400 rounded-xl space-y-2 z-50">
+              <p
+                className="p-2 text-lg text-gray-800 bg-white rounded-xl cursor-pointer"
+                key={username}
+              >
+                {username}
+              </p>
+              {Object.entries(dataConnections).map(([key, value]) => {
+                return (
+                  <p
+                    className="p-2 text-lg text-gray-800 bg-white rounded-xl cursor-pointer"
+                    key={key}
+                  >
+                    {value.username}
+                  </p>
+                );
+              })}
+              <AiOutlineUserAdd
+                size={32}
+                onClick={() => navigator.clipboard.writeText(blogId)}
+                className="p-2 bg-white rounded-xl cursor-pointer"
+              />
+            </div>
+          )}
+        </div>
+      </header>
+      <div className="grid grid-cols-4 py-2 gap-2">
+        <div
+          className="quill-wrapper col-span-4 lg:col-span-3"
+          ref={quillWrapper}
+        ></div>
+        <div className="flex flex-col items-center col-span-1 space-y-2">
+          {peer != null && localStream != null && (
+            <Video
+              key={peer.id}
+              stream={localStream}
+              constraint={{ video: false, audio: false }}
+              isLocal={true}
+              username={username}
+            />
+          )}
+          {Object.entries(mediaConnections).map(([key, value]) => {
+            return (
+              <Video
+                key={key}
+                stream={value.stream}
+                constraint={{ video: true, audio: true }}
+                isLocal={false}
+                username={dataConnections[key].username}
+              />
+            );
+          })}
+        </div>
       </div>
-      <div className="col-span-1"></div>
     </div>
   );
 }
