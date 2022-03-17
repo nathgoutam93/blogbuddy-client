@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import Peer from "peerjs";
-import { v4 as uuidV4 } from "uuid";
-
 const PeerContext = createContext(null);
 
 export const usePeer = () => {
@@ -12,7 +10,7 @@ export function PeerProvider({ children }) {
   const [peer, setPeer] = useState(null);
 
   useEffect(() => {
-    const p = new Peer(uuidV4(), {
+    const p = new Peer({
       host: "192.168.43.24",
       port: 5000,
       path: "/peerjs",
@@ -21,7 +19,6 @@ export function PeerProvider({ children }) {
 
     return () => {
       p.destroy();
-      console.log("destroyed");
     };
   }, []);
 

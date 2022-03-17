@@ -1,5 +1,7 @@
+const HASURA_ENDPOINT = process.env.REACT_APP_HASURA_ENDPOINT;
+
 async function fetchGraphQL(operationsDoc, operationName, variables, token) {
-  const result = await fetch("https://legal-cod-63.hasura.app/v1/graphql", {
+  const result = await fetch(HASURA_ENDPOINT, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -17,15 +19,12 @@ async function fetchGraphQL(operationsDoc, operationName, variables, token) {
 const operationsDoc = `
     query GetBlog($blogId: uuid!) {
       blogs_by_pk(id: $blogId) {
+        id
         blog_title
+        blog_subtitle
         created_at
         created_by
         data
-        id
-        ACTIVE_USERS {
-          user_id
-          username
-        }
       }
     }
   `;

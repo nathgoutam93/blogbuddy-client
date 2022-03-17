@@ -10,28 +10,24 @@ export function useUser() {
 
 export default function UserProvider({ children }) {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({ username: "", userId: "" });
   const [userBlogs, setUserBlogs] = useState([]);
 
   useEffect(() => {
-    if (!isAuthenticated) return setUserData(null);
+    if (!isAuthenticated) return setUserData({ username: "", userId: "" });
 
-    getAccessTokenSilently().then((token) => {
-      fetchGetUser(user.sub, token)
-        .then(({ data, errors }) => {
-          if (errors) console.error(errors);
+    const getUserData = async () => {
+      const token = await getAccessTokenSilently();
+      const { errors, data } = await fetchGetUser(user.sub, token);
+      if (errors) console.error(errors);
+      setUserData({
+        username: data.users_by_pk.username,
+        userId: data.users_by_pk.user_id,
+      });
+      setUserBlogs(data.users_by_pk.Blogs);
+    };
 
-          setUserData({
-            username: data.users_by_pk.username,
-            userId: data.users_by_pk.user_id,
-            workingOn: data.users_by_pk.working_on,
-          });
-          setUserBlogs(data.users_by_pk.Blogs);
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    });
+    getUserData();
   }, [isAuthenticated, user, getAccessTokenSilently]);
 
   return (

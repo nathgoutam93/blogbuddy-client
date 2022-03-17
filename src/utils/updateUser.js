@@ -1,5 +1,7 @@
+const HASURA_ENDPOINT = process.env.REACT_APP_HASURA_ENDPOINT;
+
 async function fetchGraphQL(operationsDoc, operationName, variables) {
-  const result = await fetch("undefined", {
+  const result = await fetch(HASURA_ENDPOINT, {
     method: "POST",
     body: JSON.stringify({
       query: operationsDoc,
@@ -12,14 +14,16 @@ async function fetchGraphQL(operationsDoc, operationName, variables) {
 }
 
 const operationsDoc = `
-    mutation UpdateUser($userId: String!) {
-      update_users_by_pk(_set: {username: "", working_on: ""}, pk_columns: {user_id: $userId}) {
+    mutation UpdateUser($userId: String!, $username: String!) {
+      update_users_by_pk(_set: {username: $username}, pk_columns: {user_id: $userId}) {
         username
-        working_on
       }
     }
   `;
 
-export default function executeUpdateUser(userId) {
-  return fetchGraphQL(operationsDoc, "UpdateUser", { userId: userId });
+export default function executeUpdateUser(userId, username) {
+  return fetchGraphQL(operationsDoc, "UpdateUser", {
+    userId: userId,
+    username: username,
+  });
 }

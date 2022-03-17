@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import Quill from "quill";
+import QuillMarkdown from "quilljs-markdown";
 import "quill/dist/quill.snow.css";
 import QuillCursors from "quill-cursors";
 Quill.register("modules/cursors", QuillCursors);
@@ -17,7 +18,7 @@ export const useQuill = () => {
 };
 
 const TOOLBAR_OPTIONS = [
-  { header: [1, 2, 3, 4, 5, 6, false] },
+  { header: [1, 2, 3] },
   "bold",
   "italic",
   "blockquote",
@@ -56,6 +57,8 @@ export function QuillProvider({ children }) {
       },
     });
     setQuill(q);
+    const quillMarkdown = new QuillMarkdown(q);
+    return () => quillMarkdown.destroy();
   }, []);
 
   const value = { quill, quillWrapper, cursorModule };

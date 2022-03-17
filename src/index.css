@@ -21,6 +21,6 @@
   }
 
   .quill-wrapper .ql-container.ql-snow {
-    @apply h-screen border-none;
+    @apply h-screen border-none text-xl;
   }
 }

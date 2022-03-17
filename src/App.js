@@ -4,7 +4,6 @@ import Home from "./pages/home";
 import Blog from "./pages/blog";
 import { PeerProvider } from "./context/peerContext";
 import { QuillProvider } from "./context/quillContext";
-// import Blog from "./testBlog";
 
 export default function App() {
   return (

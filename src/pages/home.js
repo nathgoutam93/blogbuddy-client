@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useUser } from "../context/userContext";
 import Blogs from "../components/blogs";
 import CreateNewBlog from "../utils/createNewBlog";
-import { useUser } from "../context/userContext";
 
 export default function Home() {
   const {
-    isAuthenticated,
-    isLoading,
     user,
+    isLoading,
+    isAuthenticated,
     logout,
     loginWithRedirect,
     getAccessTokenSilently,
   } = useAuth0();
   const { setUserBlogs } = useUser();
-  const navigator = useNavigate();
   const [blogId, setBlogId] = useState("");
+
+  const navigator = useNavigate();
 
   const handleJoinBlog = () => {
     if (!isAuthenticated)
@@ -33,20 +34,12 @@ export default function Home() {
         redirectUri: `http://localhost:3000/`,
       });
 
-    try {
-      const token = await getAccessTokenSilently();
-      const { data, errors } = await CreateNewBlog(user.sub, token);
-      console.log(data, errors);
-      setUserBlogs((prevState) => [...prevState, data.insert_blogs_one]);
-      // navigator(`/blogs/${newBlogId}`);
-    } catch (error) {
-      console.log(error);
-    }
+    const token = await getAccessTokenSilently();
+    const { errors, data } = await CreateNewBlog(user.sub, token);
+    if (errors) console.log(errors);
+    setUserBlogs((prevState) => [...prevState, data.insert_blogs_one]);
+    navigator(`/blogs/${data.insert_blogs_one.id}`);
   };
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-  }, [isAuthenticated, user]);
 
   if (isLoading) return <p>Loading...</p>;
 
