@@ -354,15 +354,15 @@ export default function Blog() {
   };
 
   return (
-    <div className="p-4 w-full min-h-screen font-nunito bg-gradient-to-tr from-blue-400 to-blue-200">
+    <>
       <Header
         createdBy={blog?.created_by}
         saveCallback={handleSave}
         dataConnections={dataConnections}
         blogId={blogId}
       />
-      <div className="grid grid-cols-4 py-2 gap-2">
-        <div className="p-2 bg-gray-100 col-span-4 lg:col-span-3 overflow-hidden rounded-xl">
+      <div className="max-h-screen grid grid-cols-4 p-2 gap-2">
+        <div className="p-2 col-span-4 lg:col-span-3 rounded-xl">
           <Editor
             createdBy={blog?.created_by}
             blogTitle={blogTitle}
@@ -379,6 +379,6 @@ export default function Blog() {
           />
         </div>
       </div>
-    </div>
+    </>
   );
 }

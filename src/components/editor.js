@@ -15,26 +15,34 @@ export default function Editor({
   return (
     <>
       {userData.userId === createdBy ? (
-        <div className="mt-4 space-y-2">
+        <div className="space-y-2">
           <textarea
             placeholder="Title"
-            className="w-full px-4 bg-gray-100 text-2xl"
+            className="w-full px-4 bg-white text-3xl outline-none resize-none"
             value={blogTitle || ""}
             onChange={(e) => setBlogTitle(e.target.value)}
           />
           <textarea
             placeholder="Sub Title"
-            className="w-full px-4 bg-gray-100 text-2xl"
+            className="w-full px-4 bg-white text-2xl outline-none resize-none"
             value={blogSubTitle || ""}
             onChange={(e) => setBlogSubTitle(e.target.value)}
           />
         </div>
       ) : (
         <>
-          <h1 className="mt-4 w-full px-4 text-2xl">
+          <h1
+            className={`mt-4 w-full px-4 text-2xl ${
+              blogTitle || "text-gray-500"
+            }`}
+          >
             {blogTitle ?? "No Title"}
           </h1>
-          <h1 className="mt-4 w-full px-4 text-2xl">
+          <h1
+            className={`mt-4 w-full px-4 text-2xl ${
+              blogSubTitle || "text-gray-500"
+            }`}
+          >
             {blogSubTitle ?? "No Sub Title"}
           </h1>
         </>

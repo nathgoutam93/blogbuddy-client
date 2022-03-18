@@ -13,14 +13,23 @@
   }
 
   .quill-wrapper {
-    @apply p-2 flex flex-col space-y-2 bg-gray-100 rounded-xl;
+    @apply h-full p-2 flex flex-col space-y-2 rounded-xl overflow-y-scroll s_hide;
   }
 
   .quill-wrapper .ql-toolbar.ql-snow {
-    @apply flex justify-center items-center bg-white rounded-xl border-none;
+    @apply flex justify-center items-center p-4 bg-gray-100 rounded-xl border-none;
   }
 
   .quill-wrapper .ql-container.ql-snow {
-    @apply h-screen border-none text-xl;
+    @apply h-full border-none text-xl;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .s_hide::-webkit-scrollbar {
+    display: none;
+  }
+  .s_hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }

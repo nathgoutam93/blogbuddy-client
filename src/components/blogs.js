@@ -15,8 +15,8 @@ export default function Blogs() {
               to={`/blogs/${blog.id}`}
               className="p-2 flex flex-col font-nunito text-gray-800 bg-white rounded-xl"
             >
-              <p className="text-xl">{blog.blog_title ?? "No Title"}</p>
-              <p className="text-xl">{blog.blog_subtitle ?? "No Subtitle"}</p>
+              <p className="text-xl">{blog.blog_title || "No Title"}</p>
+              <p className="text-xl">{blog.blog_subtitle || "No Subtitle"}</p>
               <p className="text-sm">{blog.created_at}</p>
             </Link>
           );
