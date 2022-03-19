@@ -22,7 +22,7 @@ export default function Home() {
   const handleJoinBlog = () => {
     if (!isAuthenticated)
       return loginWithRedirect({
-        redirectUri: `http://localhost:3000/`,
+        redirectUri: `https://bloggerbuddy.netlify.app//`,
       });
 
     navigator(`/blogs/${blogId}`);
@@ -31,7 +31,7 @@ export default function Home() {
   const handleCreateBLog = async () => {
     if (!isAuthenticated)
       return loginWithRedirect({
-        redirectUri: `http://localhost:3000/`,
+        redirectUri: `https://bloggerbuddy.netlify.app//`,
       });
 
     const token = await getAccessTokenSilently();
@@ -53,7 +53,9 @@ export default function Home() {
           {!isAuthenticated ? (
             <button
               onClick={() =>
-                loginWithRedirect({ redirectUri: "http://localhost:3000" })
+                loginWithRedirect({
+                  redirectUri: "https://bloggerbuddy.netlify.app/",
+                })
               }
               className="p-2 px-4 text-white font-bold bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl"
             >
@@ -61,7 +63,9 @@ export default function Home() {
             </button>
           ) : (
             <button
-              onClick={() => logout({ returnTo: "http://localhost:3000" })}
+              onClick={() =>
+                logout({ returnTo: "https://bloggerbuddy.netlify.app/" })
+              }
               className="p-2 px-4 text-white font-bold bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl"
             >
               Log out
