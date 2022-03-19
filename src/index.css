@@ -12,16 +12,33 @@
     @apply m-0 p-0 box-border;
   }
 
+  body {
+    @apply overflow-hidden;
+  }
+
+  #root {
+    @apply min-h-screen overflow-hidden;
+  }
+
   .quill-wrapper {
-    @apply h-full p-2 flex flex-col space-y-2 rounded-xl overflow-y-scroll s_hide;
+    @apply h-max p-2 pt-0 flex flex-col rounded-xl;
   }
 
   .quill-wrapper .ql-toolbar.ql-snow {
-    @apply flex justify-center items-center p-4 bg-gray-100 rounded-xl border-none;
+    @apply sticky -top-2 flex justify-center items-center p-4 bg-gray-100 rounded-xl border border-gray-200 z-50;
   }
 
   .quill-wrapper .ql-container.ql-snow {
-    @apply h-full border-none text-xl;
+    @apply h-full pt-4 border-none text-xl;
+  }
+
+  .quill-wrapper .ql-container.ql-snow .ql-editor {
+    @apply pb-40 outline-none;
+    scrollbar-width: none;
+  }
+
+  .quill-wrapper .ql-container.ql-snow .ql-editor::-webkit-scrollbar {
+    display: none;
   }
 
   /* Hide scrollbar for Chrome, Safari and Opera */

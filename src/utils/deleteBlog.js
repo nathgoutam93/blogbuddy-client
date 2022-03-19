@@ -2,10 +2,10 @@ const HASURA_ENDPOINT = process.env.REACT_APP_HASURA_ENDPOINT;
 
 async function fetchGraphQL(operationsDoc, operationName, variables, token) {
   const result = await fetch(HASURA_ENDPOINT, {
-    method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    method: "POST",
     body: JSON.stringify({
       query: operationsDoc,
       variables: variables,
@@ -17,25 +17,13 @@ async function fetchGraphQL(operationsDoc, operationName, variables, token) {
 }
 
 const operationsDoc = `
-    query GetUser($userId: String!) {
-      users_by_pk(user_id: $userId) {
-        user_id
-        username
-        Blogs(limit: 3) {
-          id
-          blog_title
-          blog_subtitle
-          created_at
-        }
+    mutation DeleteBlog($id: uuid!) {
+      delete_blogs_by_pk(id: $id) {
+        id
       }
     }
   `;
 
-export default function fetchGetUser(userId, accessToken) {
-  return fetchGraphQL(
-    operationsDoc,
-    "GetUser",
-    { userId: userId },
-    accessToken
-  );
+export default function DeleteBlog(id, accessToken) {
+  return fetchGraphQL(operationsDoc, "DeleteBlog", { id: id }, accessToken);
 }

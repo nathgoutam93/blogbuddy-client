@@ -69,30 +69,22 @@ export default function Home() {
           )}
         </div>
       </header>
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 flex flex-col justify-center space-y-2">
-        <div className="flex space-x-2">
+      <div className="w-5/6 max-w-lg fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-2 flex flex-col justify-center space-y-2">
+        <div className="relative p-2 flex bg-white  rounded-3xl space-y-2">
+          <input
+            type="text"
+            onChange={(e) => setBlogId(e.target.value)}
+            value={blogId}
+            placeholder="Blog ID"
+            className="flex-1 p-2 px-4 rounded-3xl"
+          />
           <button
-            className="w-max p-2 px-4 text-white bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl cursor-pointer"
-            onClick={handleCreateBLog}
+            className="absolute right-2 top-0 w-max p-2 px-4 text-white bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl cursor-pointer"
+            disabled={!blogId}
+            onClick={handleJoinBlog}
           >
-            Create New Blog
+            Join Blog
           </button>
-          <div className="relative p-2 flex bg-white  rounded-3xl space-y-2">
-            <input
-              type="text"
-              onChange={(e) => setBlogId(e.target.value)}
-              value={blogId}
-              placeholder="Blog ID"
-              className="p-2 px-4 rounded-3xl"
-            />
-            <button
-              className="absolute right-2 top-0 w-max p-2 px-4 text-white bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl cursor-pointer"
-              disabled={!blogId}
-              onClick={handleJoinBlog}
-            >
-              Join Blog
-            </button>
-          </div>
         </div>
         {user?.sub ? (
           <div>
@@ -103,6 +95,12 @@ export default function Home() {
             Log in <br></br> To see your Blogs
           </p>
         )}
+        <button
+          className="w-max p-2 px-4 text-white bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl cursor-pointer"
+          onClick={handleCreateBLog}
+        >
+          Create New Blog
+        </button>
       </div>
     </div>
   );

@@ -13,7 +13,7 @@ export default function Header({
   const [showConnection, setShowConnection] = useState(false);
 
   return (
-    <header className="sticky top-0 p-4 flex justify-between items-center bg-white border-b border-gray-300 space-x-4 z-50">
+    <header className="p-4 flex justify-between items-center bg-white border-b border-gray-300 space-x-4">
       <Link
         to={"/"}
         className="flex-1 text-2xl font-bold font-milonga text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-teal-900"
@@ -22,10 +22,10 @@ export default function Header({
       </Link>
       {userData.userId === createdBy && (
         <button
-          className="p-2 px-4 text-white bg-gradient-to-r from-blue-400 to-blue-500 rounded-3xl"
+          className="p-2 px-4 flex justify-center items-center text-blue-600 border border-blue-600 rounded-3xl"
           onClick={saveCallback}
         >
-          Save Changes
+          <span>Save Changes</span>
         </button>
       )}
       <div

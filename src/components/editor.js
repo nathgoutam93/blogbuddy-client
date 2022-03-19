@@ -14,39 +14,32 @@ export default function Editor({
 
   return (
     <>
-      {userData.userId === createdBy ? (
-        <div className="space-y-2">
-          <textarea
-            placeholder="Title"
-            className="w-full px-4 bg-white text-3xl outline-none resize-none"
-            value={blogTitle || ""}
-            onChange={(e) => setBlogTitle(e.target.value)}
-          />
-          <textarea
-            placeholder="Sub Title"
-            className="w-full px-4 bg-white text-2xl outline-none resize-none"
-            value={blogSubTitle || ""}
-            onChange={(e) => setBlogSubTitle(e.target.value)}
-          />
-        </div>
-      ) : (
-        <>
-          <h1
-            className={`mt-4 w-full px-4 text-2xl ${
-              blogTitle || "text-gray-500"
-            }`}
-          >
-            {blogTitle ?? "No Title"}
-          </h1>
-          <h1
-            className={`mt-4 w-full px-4 text-2xl ${
-              blogSubTitle || "text-gray-500"
-            }`}
-          >
-            {blogSubTitle ?? "No Sub Title"}
-          </h1>
-        </>
-      )}
+      <div>
+        <textarea
+          value={blogTitle || ""}
+          onChange={(e) => {
+            setBlogTitle(e.target.value);
+            e.target.style.height = "inherit";
+            e.target.style.height = `${e.target.scrollHeight}px`;
+          }}
+          className="w-full h-20 mt-4 px-4 bg-white text-3xl outline-none overflow-hidden resize-none"
+          readOnly={createdBy !== userData.userId}
+          placeholder="Title"
+          maxLength={150}
+        />
+        <textarea
+          value={blogSubTitle || ""}
+          onChange={(e) => {
+            setBlogSubTitle(e.target.value);
+            e.target.style.height = "inherit";
+            e.target.style.height = `${e.target.scrollHeight}px`;
+          }}
+          className="w-full h-16 my-4 px-4 bg-white text-2xl outline-none overflow-hidden resize-none"
+          readOnly={createdBy !== userData.userId}
+          placeholder="Sub Title"
+          maxLength={150}
+        />
+      </div>
       <div className="quill-wrapper" ref={quillWrapper}></div>
     </>
   );

@@ -44,14 +44,14 @@ export default function Video({
   }, [stream, videoEnabled, audioEnabled, isLocal]);
 
   return (
-    <div className="relative bg-gray-200 rounded-xl">
-      <span className="absolute top-2 right-2 p-2 font-nunito bg-white rounded-lg">
+    <div className="relative h-full lg:h-auto flex flex-shrink-0 bg-gray-200 rounded-xl">
+      <p className="absolute top-2 w-40 right-2 p-2 text-center font-nunito truncate bg-white rounded-lg pointer-events-none">
         {username}
-      </span>
+      </p>
       <video
         autoPlay
         playsInline
-        className="rounded-xl peer"
+        className="max-h-full rounded-xl peer"
         ref={videoRef}
       ></video>
       <div className="absolute left-0 bottom-0 w-full p-5 flex justify-center items-center rounded-xl space-x-2 opacity-0 peer-hover:opacity-100 hover:opacity-100">

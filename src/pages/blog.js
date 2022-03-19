@@ -6,9 +6,10 @@ import { useUser } from "../context/userContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import Header from "../components/header";
 import Editor from "../components/editor";
-import VideoContainer from "../components/videoContainer";
 import GetBlog from "../utils/getBlog";
 import UpdateBlog from "../utils/updateBlog";
+import VideoContainer from "../components/videoContainer";
+import VideoContainerHorizontal from "../components/videoContainerHorizontal";
 
 const SERVER_ENDPOINT = process.env.REACT_APP_SERVER_ENDPOINT;
 
@@ -259,7 +260,7 @@ export default function Blog() {
 
     // fetch all active users working on this Blog Id
     const connectToActiveUsers = async () => {
-      const res = await fetch(SERVER_ENDPOINT, {
+      const res = await fetch(`${SERVER_ENDPOINT}/saveUser`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -361,8 +362,15 @@ export default function Blog() {
         dataConnections={dataConnections}
         blogId={blogId}
       />
-      <div className="max-h-screen grid grid-cols-4 p-2 gap-2">
-        <div className="p-2 col-span-4 lg:col-span-3 rounded-xl">
+      <div className="sticky top-0 lg:hidden">
+        <VideoContainerHorizontal
+          localStream={localStream}
+          dataConnections={dataConnections}
+          mediaConnections={mediaConnections}
+        />
+      </div>
+      <div className="grid grid-cols-4 p-2 gap-2">
+        <div className="max-h-screen p-2 col-span-4 lg:col-span-3 rounded-xl overflow-scroll s_hide">
           <Editor
             createdBy={blog?.created_by}
             blogTitle={blogTitle}
@@ -371,7 +379,7 @@ export default function Blog() {
             setBlogSubTitle={setBlogSubTitle}
           />
         </div>
-        <div className="flex flex-col items-center col-span-1 space-y-2">
+        <div className="max-h-screen pb-24 hidden lg:flex flex-col items-center col-span-1 overflow-auto space-y-2 s_hide">
           <VideoContainer
             localStream={localStream}
             dataConnections={dataConnections}
