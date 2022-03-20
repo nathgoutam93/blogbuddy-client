@@ -12,7 +12,7 @@ export default function VideoContainerHorizontal({
   const { userData } = useUser();
 
   return (
-    <div className="p-2 h-40 flex space-x-2 overflow-auto">
+    <div className="p-2 flex space-x-2 overflow-x-auto">
       {peer != null && localStream != null && (
         <Video
           key={peer.id}

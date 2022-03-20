@@ -18,11 +18,12 @@ export default function Home() {
   const [blogId, setBlogId] = useState("");
 
   const navigator = useNavigate();
+  const callbackURL = window.location.origin;
 
   const handleJoinBlog = () => {
     if (!isAuthenticated)
       return loginWithRedirect({
-        redirectUri: `https://bloggerbuddy.netlify.app//`,
+        redirectUri: callbackURL,
       });
 
     navigator(`/blogs/${blogId}`);
@@ -31,7 +32,7 @@ export default function Home() {
   const handleCreateBLog = async () => {
     if (!isAuthenticated)
       return loginWithRedirect({
-        redirectUri: `https://bloggerbuddy.netlify.app//`,
+        redirectUri: callbackURL,
       });
 
     const token = await getAccessTokenSilently();
@@ -54,7 +55,7 @@ export default function Home() {
             <button
               onClick={() =>
                 loginWithRedirect({
-                  redirectUri: "https://bloggerbuddy.netlify.app/",
+                  redirectUri: callbackURL,
                 })
               }
               className="p-2 px-4 text-white font-bold bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl"
@@ -63,9 +64,7 @@ export default function Home() {
             </button>
           ) : (
             <button
-              onClick={() =>
-                logout({ returnTo: "https://bloggerbuddy.netlify.app/" })
-              }
+              onClick={() => logout({ returnTo: callbackURL })}
               className="p-2 px-4 text-white font-bold bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl"
             >
               Log out
