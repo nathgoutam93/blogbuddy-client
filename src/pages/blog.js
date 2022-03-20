@@ -323,7 +323,11 @@ export default function Blog() {
   useEffect(() => {
     const getlocalMediaStream = async () => {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: {
+          width: { min: 320, ideal: 640, max: 1280 },
+          height: { min: 240, ideal: 400, max: 720 },
+          aspectRatio: { ideal: 1.7777777778 },
+        },
         audio: true,
       });
       setLocalStream(mediaStream);
