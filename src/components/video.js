@@ -45,15 +45,17 @@ export default function Video({
 
   return (
     <div className="relative flex flex-col flex-shrink-0 bg-gray-200 rounded-xl">
-      <p className="absolute top-2 w-40 right-2 p-2 text-center font-nunito truncate bg-white rounded-lg pointer-events-none">
-        {username}
-      </p>
       <video
         autoPlay
         playsInline
         className="w-52 lg:w-80 h-40 lg:h-60 object-cover rounded-xl peer"
         ref={videoRef}
       ></video>
+      {username && (
+        <p className="absolute top-2 w-40 right-2 p-2 text-center font-nunito truncate bg-white rounded-lg opacity-10 peer-hover:opacity-100 hover:opacity-100 pointer-events-none">
+          {username}
+        </p>
+      )}
       <div className="absolute left-0 bottom-0 w-full p-5 flex justify-center items-center rounded-xl space-x-2 opacity-10 peer-hover:opacity-100 hover:opacity-100">
         <button
           onClick={handleVideoToggle}

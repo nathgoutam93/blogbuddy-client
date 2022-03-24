@@ -8,12 +8,13 @@ export default function Header({
   saveCallback,
   dataConnections,
   blogId,
+  username,
 }) {
   const { userData } = useUser();
   const [showConnection, setShowConnection] = useState(false);
 
   return (
-    <header className="sticky top-0 p-4 flex justify-between items-center bg-white border-b border-gray-300 space-x-4 z-50">
+    <header className="w-full h-16 p-4 flex justify-between items-center bg-white border-b border-gray-300 space-x-4 z-50">
       <Link
         to={"/"}
         className="text-2xl font-bold font-milonga text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-teal-900"
@@ -21,12 +22,12 @@ export default function Header({
         BlogBuddy
       </Link>
       <div className="flex justify-center items-center space-x-2">
-        {userData.userId === createdBy && (
+        {userData?.userId === createdBy && (
           <button
-            className="p-2 px-4 flex justify-center items-center text-blue-600 border border-blue-600 rounded-3xl"
+            className="p-1 px-4 flex justify-center items-center text-blue-600 border border-blue-600 rounded-3xl"
             onClick={saveCallback}
           >
-            <span>Save Changes</span>
+            <span>Save</span>
           </button>
         )}
         <div
@@ -41,9 +42,9 @@ export default function Header({
             <div className="absolute top-full translate-y-4 left-full -translate-x-full p-2 flex flex-col bg-blue-400 rounded-xl space-y-2 z-50">
               <p
                 className="p-2 text-lg text-gray-800 bg-white rounded-xl cursor-pointer"
-                key={userData?.username}
+                key={username}
               >
-                {userData?.username}
+                {username}
               </p>
               {Object.entries(dataConnections).map(([key, value]) => {
                 return (

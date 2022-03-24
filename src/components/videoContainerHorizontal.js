@@ -19,7 +19,7 @@ export default function VideoContainerHorizontal({
           stream={localStream}
           constraint={{ video: false, audio: false }}
           isLocal={true}
-          username={userData?.username}
+          username={userData?.username || "You"}
         />
       )}
       {Object.entries(mediaConnections).map(([key, value]) => {

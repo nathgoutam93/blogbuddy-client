@@ -7,14 +7,14 @@ export default function Blogs() {
   const { userBlogs } = useUser();
 
   return (
-    <div className="py-4 bg-bg-gray-200 rounded-xl space-y-2">
+    <>
       {userBlogs.length ? (
         userBlogs.map((blog) => {
           return (
             <Link
               key={blog.id}
               to={`/blogs/${blog.id}`}
-              className="p-2 flex flex-col font-nunito text-gray-800 bg-white rounded-xl"
+              className="p-4 w-full max-w-2xl flex flex-col text-gray-800 bg-white rounded-xl shadow-md"
             >
               <p className="text-xl truncate">
                 {blog.blog_title || "No Title"}
@@ -35,6 +35,6 @@ export default function Blogs() {
           Let's Write A Blog Togather
         </p>
       )}
-    </div>
+    </>
   );
 }
