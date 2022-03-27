@@ -6,7 +6,7 @@ export default function Video({
   stream,
   constraint = { video: true, audio: true },
   isLocal,
-  username,
+  username
 }) {
   const videoRef = useRef(null);
 

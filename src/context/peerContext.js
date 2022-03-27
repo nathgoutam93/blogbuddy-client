@@ -17,7 +17,7 @@ export function PeerProvider({ children }) {
     const p = new Peer(uuidv4(), {
       host: SERVER_HOST,
       path: "/peerjs",
-      secure: true,
+      secure: true
     });
     setPeer(p);
 

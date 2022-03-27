@@ -4,9 +4,9 @@ module.exports = {
     extend: {
       fontFamily: {
         milonga: ["Milonga", "cursive"],
-        nunito: ["Nunito", "sans-serif"],
-      },
-    },
+        nunito: ["Nunito", "sans-serif"]
+      }
+    }
   },
-  plugins: [],
+  plugins: []
 };

@@ -8,6 +8,7 @@ export default function Editor({
   blogSubTitle,
   setBlogTitle,
   setBlogSubTitle,
+  handleTitlesChange
 }) {
   const { userData } = useUser();
   const { quillWrapper } = useQuill();
@@ -19,6 +20,7 @@ export default function Editor({
           value={blogTitle || ""}
           onChange={(e) => {
             setBlogTitle(e.target.value);
+            handleTitlesChange({ blogTitle: e.target.value, blogSubTitle });
             e.target.style.height = "inherit";
             e.target.style.height = `${e.target.scrollHeight}px`;
           }}
@@ -31,6 +33,7 @@ export default function Editor({
           value={blogSubTitle || ""}
           onChange={(e) => {
             setBlogSubTitle(e.target.value);
+            handleTitlesChange({ blogTitle, blogSubTitle: e.target.value });
             e.target.style.height = "inherit";
             e.target.style.height = `${e.target.scrollHeight}px`;
           }}

@@ -3,7 +3,7 @@ import React, {
   useContext,
   useState,
   useCallback,
-  useEffect,
+  useEffect
 } from "react";
 import Quill from "quill";
 import QuillMarkdown from "quilljs-markdown";
@@ -18,15 +18,14 @@ export const useQuill = () => {
 };
 
 const TOOLBAR_OPTIONS = [
-  { header: [1, 2, 3] },
+  { header: [1, 2, 3, false] },
   "bold",
   "italic",
   "blockquote",
   "code-block",
   "link",
   { list: "bullet" },
-  { list: "ordered" },
-  "image",
+  { list: "ordered" }
 ];
 
 export function QuillProvider({ children }) {
@@ -47,14 +46,15 @@ export function QuillProvider({ children }) {
     wrapper.append(editor);
     const q = new Quill(editor, {
       theme: "snow",
+      placeholder: "write a story",
       modules: {
         toolbar: TOOLBAR_OPTIONS,
         cursors: {
           hideDelayMs: 5000,
           hideSpeedMs: 100,
-          transformOnTextChange: true,
-        },
-      },
+          transformOnTextChange: true
+        }
+      }
     });
     setQuill(q);
     const quillMarkdown = new QuillMarkdown(q);

@@ -14,7 +14,7 @@ export default function Blogs() {
             <Link
               key={blog.id}
               to={`/blogs/${blog.id}`}
-              className="p-4 w-full max-w-2xl flex flex-col text-gray-800 bg-white rounded-xl shadow-md"
+              className="p-4 w-full max-w-2xl flex flex-col font-nunito text-gray-700 bg-white rounded-xl shadow-md"
             >
               <p className="text-xl truncate">
                 {blog.blog_title || "No Title"}
@@ -22,11 +22,20 @@ export default function Blogs() {
               <p className="text-xl truncate">
                 {blog.blog_subtitle || "No Subtitle"}
               </p>
-              <p className="text-sm">
-                {formatDistanceToNow(parseISO(blog.created_at), {
-                  addSuffix: true,
-                })}
-              </p>
+              <div className="py-2 flex flex-col lg:flex-row justify-between">
+                <p className="text-sm">
+                  updated{" "}
+                  {formatDistanceToNow(parseISO(blog.updated_at), {
+                    addSuffix: true
+                  })}
+                </p>
+                <p className="text-sm">
+                  created{" "}
+                  {formatDistanceToNow(parseISO(blog.created_at), {
+                    addSuffix: true
+                  })}
+                </p>
+              </div>
             </Link>
           );
         })

@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Milonga&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -17,7 +17,7 @@
   }
 
   .active {
-    @apply font-bold;
+    @apply font-bold text-gray-900;
   }
 
   .quill-wrapper {

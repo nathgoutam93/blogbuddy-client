@@ -6,7 +6,7 @@ import Video from "./video";
 export default function VideoContainer({
   localStream,
   mediaConnections,
-  dataConnections,
+  dataConnections
 }) {
   const { peer } = usePeer();
   const { userData } = useUser();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { usePeer } from "../context/peerContext";
 import { useQuill } from "../context/quillContext";
@@ -6,16 +6,17 @@ import { useUser } from "../context/userContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import Header from "../components/header";
 import Editor from "../components/editor";
-import GetBlog from "../utils/getBlog";
-import UpdateBlog from "../utils/updateBlog";
 import VideoContainer from "../components/videoContainer";
 import VideoContainerHorizontal from "../components/videoContainerHorizontal";
-
-const SERVER_ENDPOINT = process.env.REACT_APP_SERVER_ENDPOINT;
+import GetBlog from "../utils/getBlog";
+import UpdateBlog from "../utils/updateBlog";
+import getActiveUsers from "../utils/getActiveUsers";
 
 export default function Blog() {
   const { blogId } = useParams();
-  const { userData } = useUser();
+  const {
+    userData: { username }
+  } = useUser();
   const { getAccessTokenSilently } = useAuth0();
   const { peer } = usePeer();
   const { quill, cursorModule } = useQuill();
@@ -23,51 +24,44 @@ export default function Blog() {
   const [blog, setBlog] = useState(null);
   const [blogTitle, setBlogTitle] = useState("");
   const [blogSubTitle, setBlogSubTitle] = useState("");
+  const blogRef = useRef(null);
 
   const [dataConnections, setDataConnections] = useState({});
   const [mediaConnections, setMediaConnections] = useState({});
   const [localStream, setLocalStream] = useState(null);
 
-  useEffect(() => {
-    if (!blogId) return;
-
-    const getBlogData = async () => {
-      const token = await getAccessTokenSilently();
-      const { errors, data } = await GetBlog(blogId, token);
-      if (errors) console.log(errors);
-      setBlog(data.blogs_by_pk);
-    };
-
-    getBlogData();
-  }, [blogId, getAccessTokenSilently]);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (blog == null || quill == null) return;
-
     setBlogTitle(blog.blog_title);
     setBlogSubTitle(blog.blog_subtitle);
     quill.setContents(JSON.parse(blog.data));
   }, [blog, quill]);
 
   useEffect(() => {
-    if (
-      peer == null ||
-      quill == null ||
-      cursorModule == null ||
-      !userData.username
-    )
+    blogRef.current = {
+      ...blog,
+      blog_title: blogTitle,
+      blog_subtitle: blogSubTitle
+    };
+  }, [blog, blogTitle, blogSubTitle]);
+
+  useEffect(() => {
+    if (peer == null || quill == null || cursorModule == null || !username)
       return;
+
     peer.on("connection", (conn) => {
       conn.on("data", (data) => {
         let toggleFlagTimeout = 0;
 
         const handleNewUser = () => {
           //send username to the peer to complete connection process and add peer to connections
-          conn.send({ type: "username", value: userData.username });
+          conn.send({ type: "username", value: username });
           setDataConnections((previousState) => {
             previousState[conn.peer] = {
               username: data.value,
-              dataConnection: conn,
+              dataConnection: conn
             };
             return { ...previousState };
           });
@@ -75,14 +69,13 @@ export default function Blog() {
           const colors = [
             "#4169E1",
             "#7FFFD4",
-            "#52595D",
+            "#FAF884",
             "#FF7722",
             "#FF2400",
             "#FEA3AA",
-            "#4B0082",
+            "#4B0082"
           ];
           const randomColor = colors[Math.floor(Math.random() * colors.length)];
-          // const randomColor = Math.floor(Math.random() * 16777215).toString(16);
           cursorModule.createCursor(conn.peer, data.value, `${randomColor}`);
         };
 
@@ -108,13 +101,34 @@ export default function Blog() {
           );
         };
 
+        const handleTitles = () => {
+          const titles = JSON.parse(data.value);
+          setBlogTitle(titles.blogTitle);
+          setBlogSubTitle(titles.blogSubTitle);
+        };
+
+        const handleData = () => {
+          const value = {
+            ...blogRef.current,
+            data: JSON.stringify(quill.getContents())
+          };
+          conn.send({
+            type: "data",
+            value: JSON.stringify(value)
+          });
+        };
+
         switch (data.type) {
-          case "username":
-            return handleNewUser();
           case "delta":
             return handleDelta();
           case "range":
             return handleRange();
+          case "titles":
+            return handleTitles();
+          case "username":
+            return handleNewUser();
+          case "data":
+            return handleData();
           default:
             break;
         }
@@ -135,7 +149,7 @@ export default function Blog() {
     });
 
     return () => peer.off("connection");
-  }, [peer, quill, cursorModule, userData.username]);
+  }, [peer, quill, cursorModule, username]);
 
   useEffect(() => {
     if (peer == null || localStream == null) return;
@@ -147,7 +161,7 @@ export default function Blog() {
         setMediaConnections((previousState) => {
           previousState[call.peer] = {
             mediaConnection: call,
-            stream,
+            stream
           };
           return { ...previousState };
         });
@@ -169,138 +183,157 @@ export default function Blog() {
       peer == null ||
       quill == null ||
       cursorModule == null ||
-      localStream == null ||
       !blogId ||
-      !userData.username
+      !username
     )
       return;
-    const handleDataConnect = (peerToConnect) => {
-      const conn = peer.connect(peerToConnect, { serialization: "json" });
 
-      conn?.on("open", function () {
-        //initiate connection process with sending username
-        conn.send({ type: "username", value: userData.username });
-      });
+    const handleDataConnections = async () => {
+      const activeUsers = await getActiveUsers(blogId, peer.id);
 
-      conn?.on("data", (data) => {
-        let toggleFlagTimeout = 0;
+      if (Object.keys(activeUsers).length === 1) {
+        const token = await getAccessTokenSilently();
+        const { errors, data } = await GetBlog(blogId, token);
+        if (errors) console.log(errors);
+        setBlog(data.blogs_by_pk);
+      }
 
-        // add the peer to connections on connection complete
-        const handleNewUser = () => {
+      Object.entries(activeUsers).forEach(([key, value]) => {
+        if (key === peer.id) return;
+        const conn = peer.connect(value, { serialization: "json" });
+
+        conn?.on("open", function () {
+          //initiate connection process with sending username
+          conn.send({ type: "username", value: username });
+          conn.send({ type: "data" });
+        });
+
+        conn?.on("data", (data) => {
+          let toggleFlagTimeout = 0;
+
+          // add the peer to connections on connection complete
+          const handleNewUser = () => {
+            setDataConnections((previousState) => {
+              previousState[conn.peer] = {
+                username: data.value,
+                dataConnection: conn
+              };
+              return { ...previousState };
+            });
+            // create a new cursor and assign it to remote peeer
+            const colors = [
+              "#4169E1",
+              "#7FFFD4",
+              "#FAF884",
+              "#FF7722",
+              "#FF2400",
+              "#FEA3AA",
+              "#4B0082"
+            ];
+            const randomColor =
+              colors[Math.floor(Math.random() * colors.length)];
+            cursorModule.createCursor(conn.peer, data.value, `${randomColor}`);
+          };
+
+          // replicate remote peer text changes
+          const handleDelta = () => {
+            quill.updateContents(JSON.parse(data.value));
+            cursorModule.toggleFlag(conn.peer, true);
+            if (toggleFlagTimeout > 0) clearTimeout(toggleFlagTimeout);
+            toggleFlagTimeout = setTimeout(
+              () => cursorModule.toggleFlag(conn.peer, false),
+              3000
+            );
+          };
+
+          // replicate remote peer text selection and cursor movement
+          const handleRange = () => {
+            cursorModule.moveCursor(conn.peer, JSON.parse(data.value));
+            cursorModule.toggleFlag(conn.peer, true);
+            if (toggleFlagTimeout > 0) clearTimeout(toggleFlagTimeout);
+            toggleFlagTimeout = setTimeout(
+              () => cursorModule.toggleFlag(conn.peer, false),
+              3000
+            );
+          };
+
+          const handleTitles = () => {
+            const titles = JSON.parse(data.value);
+            setBlogTitle(titles.blogTitle);
+            setBlogSubTitle(titles.blogSubTitle);
+          };
+
+          const handleData = () => {
+            const blogData = JSON.parse(data.value);
+            return setBlog((prevState) => prevState ?? blogData);
+          };
+
+          switch (data.type) {
+            case "delta":
+              return handleDelta();
+            case "range":
+              return handleRange();
+            case "titles":
+              return handleTitles();
+            case "username":
+              return handleNewUser();
+            case "data":
+              return handleData();
+            default:
+              break;
+          }
+        });
+
+        // remove the peer from connections if dataConnection got close
+        conn?.on("close", () => {
+          cursorModule.removeCursor(conn.peer);
+          setMediaConnections((previousState) => {
+            delete previousState[conn.peer];
+            return { ...previousState };
+          });
           setDataConnections((previousState) => {
-            previousState[conn.peer] = {
-              username: data.value,
-              dataConnection: conn,
+            delete previousState[conn.peer];
+            return { ...previousState };
+          });
+        });
+
+        conn?.on("error", (error) => {
+          console.log(error);
+        });
+      });
+    };
+
+    handleDataConnections();
+  }, [peer, quill, cursorModule, username, blogId, getAccessTokenSilently]);
+
+  useEffect(() => {
+    if (peer == null || !blogId || localStream == null) return;
+
+    const handleMediaConnect = async () => {
+      const activeUsers = await getActiveUsers(blogId, peer.id);
+
+      Object.entries(activeUsers).forEach(([key, value]) => {
+        if (key === peer.id) return;
+        const call = peer.call(value, localStream);
+
+        call?.on("stream", function (stream) {
+          setMediaConnections((previousState) => {
+            previousState[call.peer] = {
+              mediaConnection: call,
+              stream
             };
             return { ...previousState };
           });
-          // create a new cursor and assign it to remote peeer
-          const colors = [
-            "#4169E1",
-            "#7FFFD4",
-            "#FAF884",
-            "#FF7722",
-            "#FF2400",
-            "#FEA3AA",
-            "#4B0082",
-          ];
-          const randomColor = colors[Math.floor(Math.random() * colors.length)];
-          // const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-          cursorModule.createCursor(conn.peer, data.value, `${randomColor}`);
-        };
-
-        // replicate remote peer text changes
-        const handleDelta = () => {
-          quill.updateContents(JSON.parse(data.value));
-          cursorModule.toggleFlag(conn.peer, true);
-          if (toggleFlagTimeout > 0) clearTimeout(toggleFlagTimeout);
-          toggleFlagTimeout = setTimeout(
-            () => cursorModule.toggleFlag(conn.peer, false),
-            3000
-          );
-        };
-
-        // replicate remote peer text selection and cursor movement
-        const handleRange = () => {
-          cursorModule.moveCursor(conn.peer, JSON.parse(data.value));
-          cursorModule.toggleFlag(conn.peer, true);
-          if (toggleFlagTimeout > 0) clearTimeout(toggleFlagTimeout);
-          toggleFlagTimeout = setTimeout(
-            () => cursorModule.toggleFlag(conn.peer, false),
-            3000
-          );
-        };
-
-        switch (data.type) {
-          case "username":
-            return handleNewUser();
-          case "delta":
-            return handleDelta();
-          case "range":
-            return handleRange();
-          default:
-            break;
-        }
-      });
-
-      // remove the peer from connections if dataConnection got close
-      conn?.on("close", () => {
-        setMediaConnections((previousState) => {
-          delete previousState[conn.peer];
-          return { ...previousState };
         });
-        setDataConnections((previousState) => {
-          delete previousState[conn.peer];
-          return { ...previousState };
-        });
-      });
 
-      conn?.on("error", (error) => {
-        console.log(error);
+        call?.on("error", (error) => {
+          console.log(error);
+        });
       });
     };
 
-    const handleMediaConnect = (peerToConnect) => {
-      const call = peer.call(peerToConnect, localStream);
-
-      call?.on("stream", function (stream) {
-        setMediaConnections((previousState) => {
-          previousState[call.peer] = {
-            mediaConnection: call,
-            stream,
-          };
-          return { ...previousState };
-        });
-      });
-
-      call?.on("error", (error) => {
-        console.log(error);
-      });
-    };
-
-    // fetch all active users working on this Blog Id
-    const connectToActiveUsers = async () => {
-      const res = await fetch(`${SERVER_ENDPOINT}/saveUser`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          blogId: blogId,
-          userId: peer.id,
-          username: userData.username,
-        }),
-      });
-      const result = await res.json();
-      Object.entries(result.users).forEach(([key, value]) => {
-        if (key === peer.id) return;
-        handleDataConnect(value);
-        handleMediaConnect(value);
-      });
-    };
-
-    connectToActiveUsers();
-  }, [peer, quill, cursorModule, userData.username, localStream, blogId]);
+    handleMediaConnect();
+  }, [peer, blogId, localStream]);
 
   useEffect(() => {
     if (quill == null || !Object.keys(dataConnections).length) return;
@@ -311,7 +344,7 @@ export default function Blog() {
       Object.entries(dataConnections).forEach(([_, value]) => {
         value.dataConnection.send({
           type: "delta",
-          value: JSON.stringify(delta),
+          value: JSON.stringify(delta)
         });
       });
     };
@@ -322,7 +355,7 @@ export default function Blog() {
       Object.entries(dataConnections).forEach(([_, value]) => {
         value.dataConnection.send({
           type: "range",
-          value: JSON.stringify(range),
+          value: JSON.stringify(range)
         });
       });
     };
@@ -344,9 +377,9 @@ export default function Blog() {
         video: {
           width: { min: 320, ideal: 640, max: 1280 },
           height: { min: 240, ideal: 400, max: 720 },
-          aspectRatio: { ideal: 1.7777777778 },
+          aspectRatio: { ideal: 1.7777777778 }
         },
-        audio: true,
+        audio: true
       });
       setLocalStream(mediaStream);
     };
@@ -354,7 +387,17 @@ export default function Blog() {
     getlocalMediaStream();
   }, []);
 
+  const handleTitlesChange = (titles) => {
+    Object.values(dataConnections).forEach((value) => {
+      value.dataConnection.send({
+        type: "titles",
+        value: JSON.stringify(titles)
+      });
+    });
+  };
+
   const handleSave = async () => {
+    setSaving(true);
     const token = await getAccessTokenSilently();
     const { errors, data } = await UpdateBlog(
       blogId,
@@ -369,11 +412,12 @@ export default function Blog() {
         ...prevState,
         data: data.update_blogs_by_pk.data,
         blog_title: data.update_blogs_by_pk.blog_title,
-        blog_subtitle: data.update_blogs_by_pk.blog_subtitle,
+        blog_subtitle: data.update_blogs_by_pk.blog_subtitle
       };
     });
     setBlogTitle(data.update_blogs_by_pk.blog_title);
     setBlogSubTitle(data.update_blogs_by_pk.blog_subtitle);
+    setSaving(false);
   };
 
   return (
@@ -383,6 +427,8 @@ export default function Blog() {
         saveCallback={handleSave}
         dataConnections={dataConnections}
         blogId={blogId}
+        username={username}
+        loading={saving}
       />
       <div className="sticky top-0 lg:hidden">
         <VideoContainerHorizontal
@@ -399,6 +445,7 @@ export default function Blog() {
             blogSubTitle={blogSubTitle}
             setBlogTitle={setBlogTitle}
             setBlogSubTitle={setBlogSubTitle}
+            handleTitlesChange={handleTitlesChange}
           />
         </div>
         <div className="max-h-[calc(100vh-80px)] pb-24 hidden lg:flex flex-col items-center col-span-1 overflow-auto space-y-2 s_hide">

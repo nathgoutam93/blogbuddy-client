@@ -1,5 +1,7 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { createContext, useContext, useEffect, useState } from "react";
+import { generateUsername } from "friendly-username-generator";
+import { v4 as uuidV4 } from "uuid";
 import fetchGetUser from "../utils/getUser";
 
 const UserContext = createContext();
@@ -9,26 +11,36 @@ export function useUser() {
 }
 
 export default function UserProvider({ children }) {
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { user, isloading, isAuthenticated, getAccessTokenSilently } =
+    useAuth0();
   const [userData, setUserData] = useState({ username: "", userId: "" });
   const [userBlogs, setUserBlogs] = useState([]);
 
   useEffect(() => {
-    if (!isAuthenticated) return setUserData({ username: "", userId: "" });
+    if (isloading) return;
+
+    if (!isAuthenticated)
+      return setUserData({
+        username: generateUsername({
+          useHyphen: false,
+          useRandomNumber: false
+        }),
+        userId: uuidV4()
+      });
 
     const getUserData = async () => {
       const token = await getAccessTokenSilently();
       const { errors, data } = await fetchGetUser(user.sub, token);
       if (errors) console.error(errors);
       setUserData({
-        username: data.users_by_pk.username,
         userId: data.users_by_pk.user_id,
+        username: data.users_by_pk.username
       });
       setUserBlogs(data.users_by_pk.Blogs);
     };
 
     getUserData();
-  }, [isAuthenticated, user, getAccessTokenSilently]);
+  }, [isloading, isAuthenticated, user, getAccessTokenSilently]);
 
   return (
     <UserContext.Provider

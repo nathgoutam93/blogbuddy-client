@@ -4,13 +4,13 @@ async function fetchGraphQL(operationsDoc, operationName, variables, token) {
   const result = await fetch(HASURA_ENDPOINT, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
     },
     body: JSON.stringify({
       query: operationsDoc,
       variables: variables,
-      operationName: operationName,
-    }),
+      operationName: operationName
+    })
   });
 
   return await result.json();

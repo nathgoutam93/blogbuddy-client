@@ -3,14 +3,14 @@ const HASURA_ENDPOINT = process.env.REACT_APP_HASURA_ENDPOINT;
 async function fetchGraphQL(operationsDoc, operationName, variables, token) {
   const result = await fetch(HASURA_ENDPOINT, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
     },
     method: "POST",
     body: JSON.stringify({
       query: operationsDoc,
       variables: variables,
-      operationName: operationName,
-    }),
+      operationName: operationName
+    })
   });
 
   return await result.json();

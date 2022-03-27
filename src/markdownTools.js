@@ -83,7 +83,7 @@ export default class MarkdownTools extends Module {
         var text = this.quill.getText(selection.index, selection.length);
         this.quill.deleteText(selection.index, selection.length);
         this.quill.insertText(selection.index, `1. ${text}`);
-      },
+      }
     };
     addButton(this.container, "bold", this.handlers);
     addButton(this.container, "italic", this.handlers);

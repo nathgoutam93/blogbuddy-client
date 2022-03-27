@@ -4,32 +4,33 @@ async function fetchGraphQL(operationsDoc, operationName, variables, token) {
   const result = await fetch(HASURA_ENDPOINT, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`
     },
     body: JSON.stringify({
       query: operationsDoc,
       variables: variables,
-      operationName: operationName,
-    }),
+      operationName: operationName
+    })
   });
 
   return await result.json();
 }
 
 const operationsDoc = `
-    query GetUser($userId: String!) {
-      users_by_pk(user_id: $userId) {
-        user_id
-        username
-        Blogs(limit: 3) {
-          id
-          blog_title
-          blog_subtitle
-          created_at
-        }
+  query GetUser($userId: String!) {
+    users_by_pk(user_id: $userId) {
+      user_id
+      username
+      Blogs(order_by: {updated_at: desc}) {
+        id
+        blog_title
+        blog_subtitle
+        updated_at
+        created_at
       }
     }
-  `;
+  }
+`;
 
 export default function fetchGetUser(userId, accessToken) {
   return fetchGraphQL(
