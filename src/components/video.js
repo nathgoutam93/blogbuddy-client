@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { BsFillMicMuteFill, BsFillMicFill } from "react-icons/bs";
 import { FaVideoSlash, FaVideo } from "react-icons/fa";
+import PropTypes from "prop-types";
 
 export default function Video({
   stream,
@@ -81,3 +82,10 @@ export default function Video({
     </div>
   );
 }
+
+Video.propTypes = {
+  stream: PropTypes.object,
+  constraint: PropTypes.object,
+  isLocal: PropTypes.bool,
+  username: PropTypes.string
+};

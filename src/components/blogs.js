@@ -41,7 +41,7 @@ export default function Blogs() {
         })
       ) : (
         <p className="px-10 py-20 text-center text-xl font-nunito text-gray-800 bg-white rounded-xl">
-          Let's Write A Blog Togather
+          Let&apos;s Write A Blog Togather
         </p>
       )}
     </>

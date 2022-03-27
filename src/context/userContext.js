@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { generateUsername } from "friendly-username-generator";
 import { v4 as uuidV4 } from "uuid";
 import fetchGetUser from "../utils/getUser";
+import PropTypes from "prop-types";
 
 const UserContext = createContext();
 
@@ -50,3 +51,7 @@ export default function UserProvider({ children }) {
     </UserContext.Provider>
   );
 }
+
+UserProvider.propTypes = {
+  children: PropTypes.element
+};

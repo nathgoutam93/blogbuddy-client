@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import Peer from "peerjs";
 import { v4 as uuidv4 } from "uuid";
+import PropTypes from "prop-types";
 
 const PeerContext = createContext(null);
 
@@ -30,3 +31,7 @@ export function PeerProvider({ children }) {
 
   return <PeerContext.Provider value={value}>{children}</PeerContext.Provider>;
 }
+
+PeerProvider.propTypes = {
+  children: PropTypes.element
+};

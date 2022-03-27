@@ -348,7 +348,7 @@ export default function Blog() {
     // send text changes to all the connected peers
     const textHandler = (delta, _, source) => {
       if (source !== "user") return;
-      Object.entries(dataConnections).forEach(([_, value]) => {
+      Object.values(dataConnections).forEach((value) => {
         value.dataConnection.send({
           type: "delta",
           value: JSON.stringify(delta)
@@ -359,7 +359,7 @@ export default function Blog() {
     // send text selection to all the connected peers
     const selectionHandler = (range, _, source) => {
       if (source !== "user") return;
-      Object.entries(dataConnections).forEach(([_, value]) => {
+      Object.values(dataConnections).forEach((value) => {
         value.dataConnection.send({
           type: "range",
           value: JSON.stringify(range)

@@ -1,6 +1,7 @@
 import React from "react";
 import { useUser } from "../context/userContext";
 import { useQuill } from "../context/quillContext";
+import PropTypes from "prop-types";
 
 export default function Editor({
   createdBy,
@@ -47,3 +48,12 @@ export default function Editor({
     </>
   );
 }
+
+Editor.propTypes = {
+  createdBy: PropTypes.string,
+  blogTitle: PropTypes.string,
+  blogSubTitle: PropTypes.string,
+  setBlogTitle: PropTypes.func,
+  setBlogSubTitle: PropTypes.func,
+  handleTitlesChange: PropTypes.func
+};

@@ -2,6 +2,7 @@ import React from "react";
 import { usePeer } from "../context/peerContext";
 import { useUser } from "../context/userContext";
 import Video from "./video";
+import PropTypes from "prop-types";
 
 export default function VideoContainer({
   localStream,
@@ -36,3 +37,9 @@ export default function VideoContainer({
     </>
   );
 }
+
+VideoContainer.propTypes = {
+  localStream: PropTypes.object,
+  mediaConnections: PropTypes.object,
+  dataConnections: PropTypes.object
+};

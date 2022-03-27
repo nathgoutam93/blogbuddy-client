@@ -3,6 +3,7 @@ import { AiOutlineUserAdd, AiOutlineUser } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useUser } from "../context/userContext";
 import { ImSpinner2 } from "react-icons/im";
+import PropTypes from "prop-types";
 
 export default function Header({
   createdBy,
@@ -77,3 +78,11 @@ export default function Header({
     </header>
   );
 }
+Header.propTypes = {
+  createdBy: PropTypes.string,
+  saveCallback: PropTypes.func,
+  dataConnections: PropTypes.object,
+  blogId: PropTypes.string,
+  username: PropTypes.string,
+  loading: PropTypes.bool
+};

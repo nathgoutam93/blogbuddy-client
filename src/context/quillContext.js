@@ -5,6 +5,7 @@ import React, {
   useCallback,
   useEffect
 } from "react";
+import PropTypes from "prop-types";
 import Quill from "quill";
 import QuillMarkdown from "quilljs-markdown";
 import "quill/dist/quill.snow.css";
@@ -67,3 +68,7 @@ export function QuillProvider({ children }) {
     <QuillContext.Provider value={value}>{children}</QuillContext.Provider>
   );
 }
+
+QuillProvider.propTypes = {
+  children: PropTypes.element
+};
