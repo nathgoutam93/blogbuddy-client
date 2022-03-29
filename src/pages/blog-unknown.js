@@ -9,6 +9,7 @@ import VideoContainer from "../components/videoContainer";
 import VideoContainerHorizontal from "../components/videoContainerHorizontal";
 import getActiveUsers from "../utils/getActiveUsers";
 import { useUser } from "../context/userContext";
+const { deltaToMarkdown } = require("quill-delta-to-markdown");
 
 export default function Blog() {
   const { blogId } = useParams();
@@ -403,12 +404,34 @@ export default function Blog() {
     });
   };
 
+  function download(filename, text) {
+    const element = document.createElement("a");
+    element.setAttribute(
+      "href",
+      "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+    );
+    element.setAttribute("download", filename);
+
+    element.style.display = "none";
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+  }
+
+  const handleDownload = () => {
+    const markdown = deltaToMarkdown(quill.getContents().ops);
+    download(`${blogTitle.toLowerCase().replace(/\s/g, "-")}.md`, markdown);
+  };
+
   return (
     <div className="w-full h-screen">
       <Header
         blogId={blogId}
         username={username}
         dataConnections={dataConnections}
+        handleDownload={handleDownload}
       />
       <div className="sticky top-0 lg:hidden">
         <VideoContainerHorizontal
@@ -418,7 +441,7 @@ export default function Blog() {
         />
       </div>
       <div className="grid grid-cols-4 p-2 gap-2">
-        <div className="max-h-[calc(100vh-272px)] lg:max-h-[calc(100vh-80px)] p-2 col-span-4 lg:col-span-3 rounded-xl overflow-scroll s_hide">
+        <div className="max-h-[calc(100vh-272px)] lg:max-h-[calc(100vh-80px)] px-0 py-2 lg:px-0 col-span-4 lg:col-span-3 rounded-xl overflow-scroll s_hide">
           <Editor
             createdBy={blog?.created_by}
             blogTitle={blogTitle}

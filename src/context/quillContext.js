@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import PropTypes from "prop-types";
 import Quill from "quill";
-import QuillMarkdown from "quilljs-markdown";
 import "quill/dist/quill.snow.css";
 import QuillCursors from "quill-cursors";
 Quill.register("modules/cursors", QuillCursors);
@@ -58,8 +57,6 @@ export function QuillProvider({ children }) {
       }
     });
     setQuill(q);
-    const quillMarkdown = new QuillMarkdown(q);
-    return () => quillMarkdown.destroy();
   }, []);
 
   const value = { quill, quillWrapper, cursorModule };

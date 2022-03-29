@@ -3,15 +3,19 @@ import { AiOutlineUserAdd, AiOutlineUser } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useUser } from "../context/userContext";
 import { ImSpinner2 } from "react-icons/im";
+import { AiOutlineFileMarkdown } from "react-icons/ai";
 import PropTypes from "prop-types";
 
 export default function Header({
   createdBy,
-  saveCallback,
   dataConnections,
   blogId,
   username,
-  loading
+  loading,
+  saveCallback,
+  handleDownload
+  // publishToHashnode,
+  // publishToDev
 }) {
   const { userData } = useUser();
   const [showConnection, setShowConnection] = useState(false);
@@ -20,25 +24,45 @@ export default function Header({
     <header className="w-full h-16 p-4 flex justify-between items-center bg-white border-b border-gray-300 space-x-4 z-50">
       <Link
         to={"/"}
-        className="text-2xl font-bold font-milonga text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600"
+        className="flex lg:hidden text-2xl font-bold font-milonga text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600"
+      >
+        bb
+      </Link>
+      <Link
+        to={"/"}
+        className="hidden lg:flex text-2xl font-bold font-milonga text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600"
       >
         BlogBuddy
       </Link>
       <div className="flex justify-center items-center space-x-2">
+        <button
+          className="p-1 px-4 flex justify-center items-center text-blue-600 bg-gray-100 rounded-3xl"
+          onClick={handleDownload}
+        >
+          <AiOutlineFileMarkdown size={24} />
+        </button>
         {!!createdBy && createdBy === userData?.userId && (
-          <button
-            className="p-1 px-4 flex justify-center items-center text-blue-600 border border-blue-600 rounded-3xl"
-            onClick={saveCallback}
-          >
-            {loading ? (
-              <>
-                <span>Saving</span>
-                <ImSpinner2 className="ml-2 animate-spin" />
-              </>
-            ) : (
-              <span>Save</span>
-            )}
-          </button>
+          <>
+            <button
+              className="p-1 px-4 flex justify-center items-center text-blue-600 bg-gray-100 rounded-3xl"
+              onClick={saveCallback}
+            >
+              {loading ? (
+                <>
+                  <span>Saving</span>
+                  <ImSpinner2 className="ml-2 animate-spin" />
+                </>
+              ) : (
+                <span>Save</span>
+              )}
+            </button>
+            <button
+              className="p-1 px-4 flex justify-center items-center text-blue-600 border border-blue-600 rounded-3xl"
+              onClick={() => alert("comming soon")}
+            >
+              Publish
+            </button>
+          </>
         )}
         <div
           onClick={() => setShowConnection(!showConnection)}
@@ -81,6 +105,9 @@ export default function Header({
 Header.propTypes = {
   createdBy: PropTypes.string,
   saveCallback: PropTypes.func,
+  handleDownload: PropTypes.func,
+  // publishToHashnode: PropTypes.func,
+  // publishToDev: PropTypes.func,
   dataConnections: PropTypes.object,
   blogId: PropTypes.string,
   username: PropTypes.string,

@@ -21,7 +21,7 @@
   }
 
   .quill-wrapper {
-    @apply h-max p-2 pt-0 flex flex-col rounded-xl;
+    @apply h-max flex flex-col rounded-xl;
   }
 
   .quill-wrapper .ql-toolbar.ql-snow {

@@ -5,15 +5,24 @@ import { useUser } from "../context/userContext";
 import UpdateUser from "../utils/updateUser";
 import InputField from "./commons/inputField";
 import { BsPersonFill } from "react-icons/bs";
+import { IoExitOutline } from "react-icons/io5";
+
+const callbackURL = window.location.origin;
 
 export default function Profile() {
-  const { getAccessTokenSilently } = useAuth0();
+  const { logout, getAccessTokenSilently } = useAuth0();
   const {
     userData: { username, userId },
     setUserData
   } = useUser();
 
-  const [newUsername, setNewUsername] = useState("");
+  const [newUsername, setNewUsername] = useState(username ?? "");
+  const [hashnodeKey, setHashnodeKey] = useState(
+    localStorage.getItem("hashnodeKey") ?? ""
+  );
+  const [devtoKey, setDevtoKey] = useState(
+    localStorage.getItem("devtoKey") ?? ""
+  );
   const [loading, setLoading] = useState(false);
 
   const handleUpdateUser = async () => {
@@ -32,8 +41,16 @@ export default function Profile() {
     if (username) setNewUsername(username);
   }, [username]);
 
+  useEffect(() => {
+    localStorage.setItem("hashnodeKey", hashnodeKey);
+  }, [hashnodeKey]);
+
+  useEffect(() => {
+    localStorage.setItem("devtoKey", devtoKey);
+  }, [devtoKey]);
+
   return (
-    <div className="w-full h-full flex flex-col justify-start lg:justify-center items-center">
+    <div className="w-full h-full flex flex-col justify-start lg:justify-center items-center space-y-4">
       <div className="p-4 pt-10 flex lg:hidden flex-col items-center space-y-4">
         <BsPersonFill size={96} className="text-gray-600" />
         <p className="text-gray-600 font-nunito">@{username}</p>
@@ -59,6 +76,28 @@ export default function Profile() {
           )}
         </button>
       </div>
+      <div className="p-2 w-full max-w-xl font-nunito space-y-4">
+        <InputField
+          label="Hashnode Access Token"
+          value={hashnodeKey}
+          onChange={setHashnodeKey}
+        />
+        <InputField
+          label="Dev.to Access Token"
+          value={devtoKey}
+          onChange={setDevtoKey}
+        />
+        <p className="p-4 text-sm bg-gray-50 rounded-xl">
+          Note: Access tokens are stored locally in the browser.
+        </p>
+      </div>
+      <button
+        onClick={() => logout({ returnTo: callbackURL })}
+        className="w-max p-2 px-4 font-nunito flex lg:hidden justify-center items-center text-xl text-gray-700 hover:text-red-500 hover:bg-gray-100 rounded-3xl space-x-2"
+      >
+        <IoExitOutline />
+        <span>Log out</span>
+      </button>
     </div>
   );
 }

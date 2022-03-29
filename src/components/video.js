@@ -53,11 +53,11 @@ export default function Video({
         ref={videoRef}
       ></video>
       {username && (
-        <p className="absolute top-2 w-40 right-2 p-2 text-center font-nunito truncate bg-white rounded-lg opacity-10 peer-hover:opacity-100 hover:opacity-100 pointer-events-none">
+        <p className="absolute top-2 w-40 right-2 p-2 text-center font-nunito truncate bg-white rounded-lg opacity-10 peer-hover:opacity-100 hover:opacity-100 transition-opacity pointer-events-none">
           {username}
         </p>
       )}
-      <div className="absolute left-0 bottom-0 w-full p-5 flex justify-center items-center rounded-xl space-x-2 opacity-10 peer-hover:opacity-100 hover:opacity-100">
+      <div className="absolute left-0 bottom-0 w-full p-5 flex justify-center items-center rounded-xl space-x-2 opacity-10 peer-hover:opacity-100 hover:opacity-100 transition-opacity">
         <button
           onClick={handleVideoToggle}
           className="p-2 px-4 flex justify-center items-center bg-white w-full rounded-xl"

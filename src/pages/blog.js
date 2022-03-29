@@ -11,6 +11,9 @@ import VideoContainerHorizontal from "../components/videoContainerHorizontal";
 import GetBlog from "../utils/getBlog";
 import UpdateBlog from "../utils/updateBlog";
 import getActiveUsers from "../utils/getActiveUsers";
+import PostToHashnode from "../utils/postToHashnode";
+import PostToDev from "../utils/postToDev";
+const { deltaToMarkdown } = require("quill-delta-to-markdown");
 
 export default function Blog() {
   const { blogId } = useParams();
@@ -191,7 +194,9 @@ export default function Blog() {
     const handleDataConnections = async () => {
       const activeUsers = await getActiveUsers(blogId, peer.id);
 
-      if (Object.keys(activeUsers).length === 1) {
+      if (
+        Object.values(activeUsers).filter((key) => key == null).length === 1
+      ) {
         const token = await getAccessTokenSilently();
         const { errors, data } = await GetBlog(blogId, token);
         if (errors) console.log(errors);
@@ -420,15 +425,66 @@ export default function Blog() {
     setSaving(false);
   };
 
+  function download(filename, text) {
+    const element = document.createElement("a");
+    element.setAttribute(
+      "href",
+      "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+    );
+    element.setAttribute("download", filename);
+
+    element.style.display = "none";
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+  }
+
+  const handleDownload = () => {
+    const markdown = deltaToMarkdown(quill.getContents().ops);
+    download(`${blogTitle.toLowerCase().replace(/\s/g, "-")}.md`, markdown);
+  };
+
+  const publishToHashnode = async () => {
+    const token = localStorage.getItem("hashnodeKey");
+    if (!token) return console.log("accessKey not found");
+    const markdown = deltaToMarkdown(quill.getContents().ops);
+    const input = {
+      title: blogTitle,
+      contentMarkdown: markdown,
+      tags: []
+    };
+    const { res, error } = await PostToHashnode(input, token);
+    console.log(res, error);
+  };
+
+  const publishToDev = async () => {
+    const token = localStorage.getItem("devtoKey");
+    if (!token) return console.log("accessKey not found");
+    const markdown = deltaToMarkdown(quill.getContents().ops);
+    const input = {
+      title: blogTitle,
+      body_markdown: markdown,
+      published: true,
+      tags: []
+    };
+    const { res, error } = await PostToDev(input, token);
+    console.log(res, error);
+  };
+
   return (
     <div className="w-full h-screen">
       <Header
         createdBy={blog?.created_by}
-        saveCallback={handleSave}
         dataConnections={dataConnections}
         blogId={blogId}
         username={username}
         loading={saving}
+        saveCallback={handleSave}
+        handleDownload={handleDownload}
+        publishToHashnode={publishToHashnode}
+        publishToDev={publishToDev}
       />
       <div className="sticky top-0 lg:hidden">
         <VideoContainerHorizontal
@@ -438,7 +494,7 @@ export default function Blog() {
         />
       </div>
       <div className="grid grid-cols-4 p-2 gap-2">
-        <div className="max-h-[calc(100vh-272px)] lg:max-h-[calc(100vh-80px)] p-2 col-span-4 lg:col-span-3 rounded-xl overflow-scroll s_hide">
+        <div className="max-h-[calc(100vh-272px)] lg:max-h-[calc(100vh-80px)] px-0 py-2 lg:px-2 col-span-4 lg:col-span-3 rounded-xl overflow-scroll s_hide">
           <Editor
             createdBy={blog?.created_by}
             blogTitle={blogTitle}
