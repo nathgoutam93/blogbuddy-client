@@ -195,7 +195,7 @@ export default function Blog() {
       const activeUsers = await getActiveUsers(blogId, peer.id);
 
       if (
-        Object.values(activeUsers).filter((key) => key == null).length === 1
+        Object.values(activeUsers).filter((key) => key != null).length === 1
       ) {
         const token = await getAccessTokenSilently();
         const { errors, data } = await GetBlog(blogId, token);

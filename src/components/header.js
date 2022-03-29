@@ -92,7 +92,10 @@ export default function Header({
               })}
               <AiOutlineUserAdd
                 size={32}
-                onClick={() => navigator.clipboard.writeText(blogId)}
+                onClick={() => {
+                  navigator.clipboard.writeText(blogId);
+                  alert("Copied to Clipboard");
+                }}
                 className="p-2 bg-white rounded-xl cursor-pointer"
               />
             </div>
