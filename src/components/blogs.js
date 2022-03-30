@@ -23,18 +23,22 @@ export default function Blogs() {
                 {blog.blog_subtitle || "No Subtitle"}
               </p>
               <div className="py-2 flex flex-col lg:flex-row justify-between">
-                <p className="text-sm">
-                  updated{" "}
-                  {formatDistanceToNow(parseISO(blog.updated_at), {
-                    addSuffix: true
-                  })}
-                </p>
-                <p className="text-sm">
-                  created{" "}
-                  {formatDistanceToNow(parseISO(blog.created_at), {
-                    addSuffix: true
-                  })}
-                </p>
+                {!!blog.updated_at && (
+                  <p className="text-sm">
+                    updated{" "}
+                    {formatDistanceToNow(parseISO(blog.updated_at), {
+                      addSuffix: true
+                    })}
+                  </p>
+                )}
+                {!!blog.created_at && (
+                  <p className="text-sm">
+                    created{" "}
+                    {formatDistanceToNow(parseISO(blog.created_at), {
+                      addSuffix: true
+                    })}
+                  </p>
+                )}
               </div>
             </Link>
           );
