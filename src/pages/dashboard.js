@@ -29,7 +29,7 @@ export default function Dashboard() {
 
   return (
     <div className="w-full h-screen p-4 flex flex-col lg:grid grid-cols-6 bg-gray-100">
-      <header className="sticky top-4 w-full h-10 flex justify-between items-center lg:hidden">
+      <header className="sticky top-4 p-4 w-full h-10 flex justify-between items-center rounded-xl lg:hidden">
         <Link
           to="/"
           className="text-2xl font-bold font-milonga text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600"

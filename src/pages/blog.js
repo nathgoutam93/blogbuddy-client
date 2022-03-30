@@ -11,8 +11,7 @@ import VideoContainerHorizontal from "../components/videoContainerHorizontal";
 import GetBlog from "../utils/getBlog";
 import UpdateBlog from "../utils/updateBlog";
 import getActiveUsers from "../utils/getActiveUsers";
-import PostToHashnode from "../utils/postToHashnode";
-import PostToDev from "../utils/postToDev";
+
 const { deltaToMarkdown } = require("quill-delta-to-markdown");
 
 export default function Blog() {
@@ -446,45 +445,17 @@ export default function Blog() {
     download(`${blogTitle.toLowerCase().replace(/\s/g, "-")}.md`, markdown);
   };
 
-  const publishToHashnode = async () => {
-    const token = localStorage.getItem("hashnodeKey");
-    if (!token) return console.log("accessKey not found");
-    const markdown = deltaToMarkdown(quill.getContents().ops);
-    const input = {
-      title: blogTitle,
-      contentMarkdown: markdown,
-      tags: []
-    };
-    const { res, error } = await PostToHashnode(input, token);
-    console.log(res, error);
-  };
-
-  const publishToDev = async () => {
-    const token = localStorage.getItem("devtoKey");
-    if (!token) return console.log("accessKey not found");
-    const markdown = deltaToMarkdown(quill.getContents().ops);
-    const input = {
-      title: blogTitle,
-      body_markdown: markdown,
-      published: true,
-      tags: []
-    };
-    const { res, error } = await PostToDev(input, token);
-    console.log(res, error);
-  };
-
   return (
     <div className="w-full h-screen">
       <Header
         createdBy={blog?.created_by}
         dataConnections={dataConnections}
         blogId={blogId}
+        blogTitle={blogTitle}
         username={username}
         loading={saving}
         saveCallback={handleSave}
         handleDownload={handleDownload}
-        publishToHashnode={publishToHashnode}
-        publishToDev={publishToDev}
       />
       <div className="sticky top-0 lg:hidden">
         <VideoContainerHorizontal

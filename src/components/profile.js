@@ -50,12 +50,12 @@ export default function Profile() {
   }, [devtoKey]);
 
   return (
-    <div className="w-full h-full flex flex-col justify-start lg:justify-center items-center space-y-4">
+    <div className="w-full flex flex-col justify-start lg:justify-center items-center">
       <div className="p-4 pt-10 flex lg:hidden flex-col items-center space-y-4">
         <BsPersonFill size={96} className="text-gray-600" />
         <p className="text-gray-600 font-nunito">@{username}</p>
       </div>
-      <div className="w-full max-w-xl p-2 flex flex-col font-nunito space-y-4">
+      <div className="my-4 w-full max-w-xl p-2 flex flex-col font-nunito space-y-4">
         <InputField
           label="username"
           value={newUsername}
@@ -93,7 +93,7 @@ export default function Profile() {
       </div>
       <button
         onClick={() => logout({ returnTo: callbackURL })}
-        className="w-max p-2 px-4 font-nunito flex lg:hidden justify-center items-center text-xl text-gray-700 hover:text-red-500 hover:bg-gray-100 rounded-3xl space-x-2"
+        className="my-10 w-max h-max p-2 px-4 font-nunito flex lg:hidden justify-center items-center text-xl text-gray-700 hover:text-red-500 hover:bg-gray-100 rounded-3xl space-x-2"
       >
         <IoExitOutline />
         <span>Log out</span>

@@ -25,7 +25,7 @@
   }
 
   .quill-wrapper .ql-toolbar.ql-snow {
-    @apply sticky -top-2 flex justify-center items-center p-4 bg-gray-100 rounded-xl border border-gray-200 z-50;
+    @apply sticky -top-2 flex justify-center items-center p-4 bg-gray-100 rounded-xl border border-gray-200 z-10;
   }
 
   .quill-wrapper .ql-container.ql-snow {
