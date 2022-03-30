@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useUser } from "../context/userContext";
 import { ImSpinner2 } from "react-icons/im";
 import { AiOutlineFileMarkdown } from "react-icons/ai";
+import Toast from "./commons/toast";
 import PropTypes from "prop-types";
 
 export default function Header({
@@ -13,12 +14,25 @@ export default function Header({
   username,
   loading,
   saveCallback,
-  handleDownload
-  // publishToHashnode,
-  // publishToDev
+  handleDownload,
+  publishToDev
+  // publishToHashnode
 }) {
   const { userData } = useUser();
   const [showConnection, setShowConnection] = useState(false);
+  const [show, setShow] = useState(false);
+
+  const showToast = () => {
+    setShow(true);
+    setTimeout(() => {
+      setShow(false);
+    }, 3000);
+  };
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(blogId);
+    showToast();
+  };
 
   return (
     <header className="w-full h-16 p-4 flex justify-between items-center bg-white border-b border-gray-300 space-x-4 z-50">
@@ -58,7 +72,7 @@ export default function Header({
             </button>
             <button
               className="p-1 px-4 flex justify-center items-center text-blue-600 border border-blue-600 rounded-3xl"
-              onClick={() => alert("comming soon")}
+              onClick={publishToDev}
             >
               Publish
             </button>
@@ -92,16 +106,14 @@ export default function Header({
               })}
               <AiOutlineUserAdd
                 size={32}
-                onClick={() => {
-                  navigator.clipboard.writeText(blogId);
-                  alert("Copied to Clipboard");
-                }}
+                onClick={handleCopy}
                 className="p-2 bg-white rounded-xl cursor-pointer"
               />
             </div>
           )}
         </div>
       </div>
+      <Toast show={show} message="Copid to clipboard" />
     </header>
   );
 }
@@ -110,7 +122,7 @@ Header.propTypes = {
   saveCallback: PropTypes.func,
   handleDownload: PropTypes.func,
   // publishToHashnode: PropTypes.func,
-  // publishToDev: PropTypes.func,
+  publishToDev: PropTypes.func,
   dataConnections: PropTypes.object,
   blogId: PropTypes.string,
   username: PropTypes.string,
