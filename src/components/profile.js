@@ -4,7 +4,6 @@ import { ImSpinner2 } from "react-icons/im";
 import { useUser } from "../context/userContext";
 import UpdateUser from "../utils/updateUser";
 import InputField from "./commons/inputField";
-import { BsPersonFill } from "react-icons/bs";
 import { IoExitOutline } from "react-icons/io5";
 
 const callbackURL = window.location.origin;
@@ -52,7 +51,13 @@ export default function Profile() {
   return (
     <div className="w-full flex flex-col justify-start lg:justify-center items-center">
       <div className="p-4 pt-10 flex lg:hidden flex-col items-center space-y-4">
-        <BsPersonFill size={96} className="text-gray-600" />
+        <img
+          src={`https://avatars.dicebear.com/api/identicon/${username}.svg`}
+          alt="Profile Pic"
+          width={96}
+          height={96}
+          className="rounded-xl shadow-md border border-gray-200"
+        />
         <p className="text-gray-600 font-nunito">@{username}</p>
       </div>
       <div className="my-4 w-full max-w-xl p-2 flex flex-col font-nunito space-y-4">

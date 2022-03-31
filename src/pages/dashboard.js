@@ -2,13 +2,7 @@ import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useUser } from "../context/userContext";
 import CreateNewBlog from "../utils/createNewBlog";
-import { BsPersonFill } from "react-icons/bs";
-import {
-  IoHomeOutline,
-  IoPersonOutline,
-  IoSettingsOutline,
-  IoExitOutline
-} from "react-icons/io5";
+import { IoHomeOutline, IoPersonOutline, IoExitOutline } from "react-icons/io5";
 
 export default function Dashboard() {
   const { user, isLoading, logout, getAccessTokenSilently } = useAuth0();
@@ -43,12 +37,6 @@ export default function Dashboard() {
           >
             <IoPersonOutline size={25} />
           </NavLink>
-          <NavLink
-            to={"/dashboard/settings"}
-            className="w-max p-2 px-4 text-xl text-gray-800 hover:bg-gray-100 rounded-3xl"
-          >
-            <IoSettingsOutline size={25} />
-          </NavLink>
         </div>
       </header>
       <header className="hidden col-span-1 p-4 pb-10 lg:flex flex-col justify-between font-nunito bg-white rounded-xl shadow-md border border-gray-200">
@@ -71,13 +59,6 @@ export default function Dashboard() {
               <IoPersonOutline />
               <span>Profile</span>
             </NavLink>
-            <NavLink
-              to={"/dashboard/settings"}
-              className="w-max p-2 px-4 flex justify-center items-center text-xl text-gray-700 hover:bg-gray-100 rounded-3xl space-x-2"
-            >
-              <IoSettingsOutline />
-              <span>Settings</span>
-            </NavLink>
             <button
               className="w-max p-2 px-4 text-white bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl cursor-pointer"
               onClick={handleCreateBLog}
@@ -98,7 +79,13 @@ export default function Dashboard() {
         <Outlet />
       </div>
       <div className="hidden col-span-1 p-4 pt-10 lg:flex flex-col items-center space-y-4">
-        <BsPersonFill size={96} className="text-gray-600" />
+        <img
+          src={`https://avatars.dicebear.com/api/identicon/${userData?.username}.svg`}
+          alt="Profile Pic"
+          width={96}
+          height={96}
+          className="rounded-xl shadow-md border border-gray-200"
+        />
         <p className="text-gray-600 font-nunito">@{userData?.username}</p>
       </div>
     </div>

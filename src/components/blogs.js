@@ -44,9 +44,16 @@ export default function Blogs() {
           );
         })
       ) : (
-        <p className="px-10 py-20 text-center text-xl font-nunito text-gray-800 bg-white rounded-xl">
-          Let&apos;s Write A Blog Togather
-        </p>
+        <div className="w-full max-w-xl p-4 flex flex-col justify-center items-center bg-white rounded-xl overflow-hidden">
+          <p className="text-center text-xl font-nunito text-gray-800 z-10">
+            Let&apos;s Write A Story Together
+          </p>
+          <img
+            src="/img/together.jpg"
+            alt="bg"
+            className="top-0 h-60 rounded-xl"
+          />
+        </div>
       )}
     </>
   );

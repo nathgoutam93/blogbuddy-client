@@ -65,6 +65,9 @@ export default function Home() {
             Join Blog
           </button>
         </div>
+        <div className="relative w-full h-full">
+          <img src="/img/home.svg" alt="bg" className="" />
+        </div>
         <div className="flex flex-col justify-center items-center space-y-2">
           <button
             className="w-max p-2 px-4 text-white font-nunito bg-gradient-to-r from-teal-500 hover:from-teal-400 to-green-600 hover:to-green-500 rounded-3xl cursor-pointer"
@@ -109,6 +112,29 @@ export default function Home() {
           </p>
         </div>
       </section>
+      <footer className="w-full flex justify-between p-4 py-5 bg-green-700 space-x-4">
+        <div className="flex flex-col space-y-1">
+          <h1 className="font-milonga font-bold text-2xl text-white">
+            BlogBuddy
+          </h1>
+          <p className="font-nunito text-sm text-white">©2022 Blogbuddy</p>
+        </div>
+        <div className="flex flex-col space-y-1 text-white">
+          Credit
+          <a
+            href="https://www.freepik.com/vectors/business"
+            className="text-xs text-white"
+          >
+            Bussiness vector created by storyset
+          </a>
+          <a
+            href="https://www.freepik.com/vectors/hand-drawn"
+            className="text-xs text-white"
+          >
+            Hand drawn vector created by pikisuperstar
+          </a>
+        </div>
+      </footer>
     </section>
   );
 }
