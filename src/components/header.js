@@ -37,22 +37,22 @@ export default function Header({
 
   return (
     <>
-      <header className="w-full h-16 p-4 flex justify-between items-center bg-white border-b border-gray-300 space-x-4 z-50">
+      <header className="z-50 flex h-16 w-full items-center justify-between space-x-4 border-b border-gray-300 bg-white p-4">
         <Link
           to={"/"}
-          className="flex lg:hidden text-2xl font-bold font-milonga text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600"
+          className="flex bg-gradient-to-r from-green-400 to-green-600 bg-clip-text font-milonga text-2xl font-bold text-transparent lg:hidden"
         >
           bb
         </Link>
         <Link
           to={"/"}
-          className="hidden lg:flex text-2xl font-bold font-milonga text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-green-600"
+          className="hidden bg-gradient-to-r from-green-400 to-green-600 bg-clip-text font-milonga text-2xl font-bold text-transparent lg:flex"
         >
           BlogBuddy
         </Link>
-        <div className="flex justify-center items-center space-x-2">
+        <div className="flex items-center justify-center space-x-2">
           <button
-            className="p-1 px-4 flex justify-center items-center text-blue-600 bg-gray-100 rounded-3xl"
+            className="flex items-center justify-center rounded-3xl bg-gray-100 p-1 px-4 text-blue-600"
             onClick={handleDownload}
           >
             <AiOutlineFileMarkdown size={24} />
@@ -60,7 +60,7 @@ export default function Header({
           {!!createdBy && createdBy === userData?.userId && (
             <>
               <button
-                className="p-1 px-4 flex justify-center items-center text-blue-600 bg-gray-100 rounded-3xl"
+                className="flex items-center justify-center rounded-3xl bg-gray-100 p-1 px-4 text-blue-600"
                 onClick={saveCallback}
               >
                 {loading ? (
@@ -73,7 +73,7 @@ export default function Header({
                 )}
               </button>
               <button
-                className="p-1 px-4 flex justify-center items-center text-blue-600 border border-blue-600 rounded-3xl"
+                className="flex items-center justify-center rounded-3xl border border-blue-600 p-1 px-4 text-blue-600"
                 onClick={() => setShowModal(!showModal)}
               >
                 Publish
@@ -82,16 +82,16 @@ export default function Header({
           )}
           <div
             onClick={() => setShowConnection(!showConnection)}
-            className="relative p-1 pr-2 flex justify-center items-center bg-green-400 rounded-full space-x-2 cursor-pointer"
+            className="relative flex cursor-pointer items-center justify-center space-x-2 rounded-full bg-green-400 p-1 pr-2"
           >
-            <AiOutlineUser size={24} className="bg-white rounded-full" />
-            <span className="text-white text-lg font-bold">
+            <AiOutlineUser size={24} className="rounded-full bg-white" />
+            <span className="text-lg font-bold text-white">
               {Object.keys(dataConnections).length + 1}
             </span>
             {showConnection && (
-              <div className="absolute top-full translate-y-4 left-full -translate-x-full p-2 flex flex-col bg-green-400 rounded-xl space-y-2 z-50">
+              <div className="absolute top-full left-full z-50 flex translate-y-4 -translate-x-full flex-col space-y-2 rounded-xl bg-green-400 p-2">
                 <p
-                  className="p-2 text-lg text-gray-800 bg-white rounded-xl cursor-pointer"
+                  className="cursor-pointer rounded-xl bg-white p-2 text-lg text-gray-800"
                   key={username}
                 >
                   {username}
@@ -99,7 +99,7 @@ export default function Header({
                 {Object.entries(dataConnections).map(([key, value]) => {
                   return (
                     <p
-                      className="p-2 text-lg text-gray-800 bg-white rounded-xl cursor-pointer"
+                      className="cursor-pointer rounded-xl bg-white p-2 text-lg text-gray-800"
                       key={key}
                     >
                       {value.username}
@@ -109,7 +109,7 @@ export default function Header({
                 <AiOutlineUserAdd
                   size={32}
                   onClick={handleCopy}
-                  className="p-2 bg-white rounded-xl cursor-pointer"
+                  className="cursor-pointer rounded-xl bg-white p-2"
                 />
               </div>
             )}
@@ -120,7 +120,7 @@ export default function Header({
       {showModal && (
         <div
           onClick={() => setShowModal(!showModal)}
-          className="fixed inset-0 flex items-center justify-center z-50 bg-black/60"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
         >
           <PublishModal blogTitle={blogTitle} />
         </div>

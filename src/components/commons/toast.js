@@ -35,8 +35,8 @@ export default function Toast({ show, type, message }) {
     <div
       style={{ backgroundColor: color }}
       className={`${
-        show ? "opacity-100 right-4 lg:right-20" : "opacity-0 -right-10"
-      } fixed bottom-3/4 lg:bottom-20 p-4 flex justify-center items-center font-nunito text-white rounded-xl space-x-2 z-50 transition-all pointer-events-none`}
+        show ? "right-4 opacity-100 lg:right-20" : "-right-10 opacity-0"
+      } pointer-events-none fixed bottom-3/4 z-50 flex items-center justify-center space-x-2 rounded-xl p-4 font-nunito text-white transition-all lg:bottom-20`}
     >
       {icon}
       {message}

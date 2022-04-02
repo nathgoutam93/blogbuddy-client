@@ -14,15 +14,15 @@ export default function Blogs() {
             <Link
               key={blog.id}
               to={`/blogs/${blog.id}`}
-              className="p-4 w-full max-w-2xl flex flex-col font-nunito text-gray-700 bg-white rounded-xl shadow-md"
+              className="flex w-full max-w-2xl flex-col rounded-xl bg-white p-4 font-nunito text-gray-700 shadow-md"
             >
-              <p className="text-xl truncate">
+              <p className="truncate text-xl">
                 {blog.blog_title || "No Title"}
               </p>
-              <p className="text-xl truncate">
+              <p className="truncate text-xl">
                 {blog.blog_subtitle || "No Subtitle"}
               </p>
-              <div className="py-2 flex flex-col lg:flex-row justify-between">
+              <div className="flex flex-col justify-between py-2 lg:flex-row">
                 {!!blog.updated_at && (
                   <p className="text-sm">
                     updated{" "}
@@ -44,8 +44,8 @@ export default function Blogs() {
           );
         })
       ) : (
-        <div className="w-full max-w-xl p-4 flex flex-col justify-center items-center bg-white rounded-xl overflow-hidden">
-          <p className="text-center text-xl font-nunito text-gray-800 z-10">
+        <div className="flex w-full max-w-xl flex-col items-center justify-center overflow-hidden rounded-xl bg-white p-4">
+          <p className="z-10 text-center font-nunito text-xl text-gray-800">
             Let&apos;s Write A Story Together
           </p>
           <img

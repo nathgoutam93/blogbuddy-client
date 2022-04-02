@@ -426,7 +426,7 @@ export default function Blog() {
   };
 
   return (
-    <div className="w-full h-screen">
+    <div className="h-screen w-full">
       <Header
         blogId={blogId}
         username={username}
@@ -440,8 +440,8 @@ export default function Blog() {
           mediaConnections={mediaConnections}
         />
       </div>
-      <div className="grid grid-cols-4 p-2 gap-2">
-        <div className="max-h-[calc(100vh-272px)] lg:max-h-[calc(100vh-80px)] px-0 py-2 lg:px-0 col-span-4 lg:col-span-3 rounded-xl overflow-scroll s_hide">
+      <div className="grid grid-cols-4 gap-2 p-2">
+        <div className="s_hide col-span-4 max-h-[calc(100vh-272px)] overflow-scroll rounded-xl px-0 py-2 lg:col-span-3 lg:max-h-[calc(100vh-80px)] lg:px-0">
           <Editor
             createdBy={blog?.created_by}
             blogTitle={blogTitle}
@@ -451,7 +451,7 @@ export default function Blog() {
             handleTitlesChange={handleTitlesChange}
           />
         </div>
-        <div className="max-h-[calc(100vh-80px)] pb-24 hidden lg:flex flex-col items-center col-span-1 overflow-auto space-y-2 s_hide">
+        <div className="s_hide col-span-1 hidden max-h-[calc(100vh-80px)] flex-col items-center space-y-2 overflow-auto pb-24 lg:flex">
           <VideoContainer
             localStream={localStream}
             dataConnections={dataConnections}

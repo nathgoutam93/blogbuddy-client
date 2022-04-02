@@ -67,13 +67,13 @@ export default function PublishModal({ blogTitle }) {
   };
 
   return (
-    <div className="w-5/6 max-w-lg p-4 bg-gray-200 dark:bg-secondary flex flex-col font-nunito rounded-xl space-y-2">
+    <div className="dark:bg-secondary flex w-5/6 max-w-lg flex-col space-y-2 rounded-xl bg-gray-200 p-4 font-nunito">
       <button
         onClick={(e) => {
           e.stopPropagation();
           publishToHashnode();
         }}
-        className="w-full h-12 p-4 flex justify-center items-center bg-blue-700 text-white rounded-xl space-x-4"
+        className="flex h-12 w-full items-center justify-center space-x-4 rounded-xl bg-blue-700 p-4 text-white"
       >
         <SiHashnode size={25} />
         <span>Hashnode</span>
@@ -83,7 +83,7 @@ export default function PublishModal({ blogTitle }) {
           e.stopPropagation();
           publishToDev();
         }}
-        className="w-full h-12 p-4 flex justify-center items-center bg-black text-white rounded-xl space-x-4"
+        className="flex h-12 w-full items-center justify-center space-x-4 rounded-xl bg-black p-4 text-white"
       >
         <SiDevdotto size={25} />
         <span>Dev.to</span>

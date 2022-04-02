@@ -49,25 +49,25 @@ export default function Profile() {
   }, [devtoKey]);
 
   return (
-    <div className="w-full flex flex-col justify-start lg:justify-center items-center">
-      <div className="p-4 pt-10 flex lg:hidden flex-col items-center space-y-4">
+    <div className="flex w-full flex-col items-center justify-start lg:justify-center">
+      <div className="flex flex-col items-center space-y-4 p-4 pt-10 lg:hidden">
         <img
           src={`https://avatars.dicebear.com/api/identicon/${username}.svg`}
           alt="Profile Pic"
           width={96}
           height={96}
-          className="rounded-xl shadow-md border border-gray-200"
+          className="rounded-xl border border-gray-200 shadow-md"
         />
-        <p className="text-gray-600 font-nunito">@{username}</p>
+        <p className="font-nunito text-gray-600">@{username}</p>
       </div>
-      <div className="my-4 w-full max-w-xl p-2 flex flex-col font-nunito space-y-4">
+      <div className="my-4 flex w-full max-w-xl flex-col space-y-4 p-2 font-nunito">
         <InputField
           label="username"
           value={newUsername}
           onChange={setNewUsername}
         />
         <button
-          className="w-max p-2 px-4 flex items-center text-white bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl cursor-pointer"
+          className="flex w-max cursor-pointer items-center rounded-3xl bg-gradient-to-r from-teal-400 to-green-500 p-2 px-4 text-white hover:from-teal-500 hover:to-green-600"
           disabled={!newUsername || newUsername === username}
           onClick={handleUpdateUser}
         >
@@ -81,7 +81,7 @@ export default function Profile() {
           )}
         </button>
       </div>
-      <div className="p-2 w-full max-w-xl font-nunito space-y-4">
+      <div className="w-full max-w-xl space-y-4 p-2 font-nunito">
         <InputField
           label="Hashnode Access Token"
           value={hashnodeKey}
@@ -92,13 +92,13 @@ export default function Profile() {
           value={devtoKey}
           onChange={setDevtoKey}
         />
-        <p className="p-4 text-sm bg-gray-50 rounded-xl">
+        <p className="rounded-xl bg-gray-50 p-4 text-sm">
           Note: Access tokens are stored locally in the browser.
         </p>
       </div>
       <button
         onClick={() => logout({ returnTo: callbackURL })}
-        className="my-10 w-max h-max p-2 px-4 font-nunito flex lg:hidden justify-center items-center text-xl text-gray-700 hover:text-red-500 hover:bg-gray-100 rounded-3xl space-x-2"
+        className="my-10 flex h-max w-max items-center justify-center space-x-2 rounded-3xl p-2 px-4 font-nunito text-xl text-gray-700 hover:bg-gray-100 hover:text-red-500 lg:hidden"
       >
         <IoExitOutline />
         <span>Log out</span>

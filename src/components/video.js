@@ -45,22 +45,22 @@ export default function Video({
   }, [stream, videoEnabled, audioEnabled, isLocal]);
 
   return (
-    <div className="relative flex flex-col flex-shrink-0 bg-gray-200 rounded-xl">
+    <div className="relative flex flex-shrink-0 flex-col rounded-xl bg-gray-200">
       <video
         autoPlay
         playsInline
-        className="w-52 lg:w-80 h-40 lg:h-60 object-cover rounded-xl peer"
+        className="peer h-40 w-52 rounded-xl object-cover lg:h-60 lg:w-80"
         ref={videoRef}
       ></video>
       {username && (
-        <p className="absolute top-2 w-40 right-2 p-2 text-center font-nunito truncate bg-white rounded-lg opacity-10 peer-hover:opacity-100 hover:opacity-100 transition-opacity pointer-events-none">
+        <p className="pointer-events-none absolute top-2 right-2 w-40 truncate rounded-lg bg-white p-2 text-center font-nunito opacity-10 transition-opacity hover:opacity-100 peer-hover:opacity-100">
           {username}
         </p>
       )}
-      <div className="absolute left-0 bottom-0 w-full p-5 flex justify-center items-center rounded-xl space-x-2 opacity-10 peer-hover:opacity-100 hover:opacity-100 transition-opacity">
+      <div className="absolute left-0 bottom-0 flex w-full items-center justify-center space-x-2 rounded-xl p-5 opacity-10 transition-opacity hover:opacity-100 peer-hover:opacity-100">
         <button
           onClick={handleVideoToggle}
-          className="p-2 px-4 flex justify-center items-center bg-white w-full rounded-xl"
+          className="flex w-full items-center justify-center rounded-xl bg-white p-2 px-4"
         >
           {videoEnabled ? (
             <FaVideoSlash size={32} className="text-gray-800" />
@@ -70,7 +70,7 @@ export default function Video({
         </button>
         <button
           onClick={handleAudioToggle}
-          className="p-2 px-4 flex justify-center items-center bg-white w-full rounded-xl"
+          className="flex w-full items-center justify-center rounded-xl bg-white p-2 px-4"
         >
           {audioEnabled ? (
             <BsFillMicMuteFill size={32} className="text-gray-800" />

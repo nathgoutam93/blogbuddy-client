@@ -25,41 +25,41 @@ export default function DashboardHome() {
 
   return (
     <>
-      <div className="w-full h-1/3 p-4 flex flex-col justify-center items-center font-nunito space-y-4">
-        <div className="relative w-full max-w-2xl p-2 flex bg-white rounded-3xl space-y-2 shadow-sm">
+      <div className="flex h-1/3 w-full flex-col items-center justify-center space-y-4 p-4 font-nunito">
+        <div className="relative flex w-full max-w-2xl space-y-2 rounded-3xl bg-white p-2 shadow-sm">
           <input
             type="text"
             onChange={(e) => setBlogId(e.target.value)}
             value={blogId}
             placeholder="Blog ID"
-            className="flex-1 p-2 px-4 rounded-3xl outline-none"
+            className="flex-1 rounded-3xl p-2 px-4 outline-none"
           />
           <button
-            className="absolute right-2 top-0 w-max p-2 px-4 text-white bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl cursor-pointer"
+            className="absolute right-2 top-0 w-max cursor-pointer rounded-3xl bg-gradient-to-r from-teal-400 to-green-500 p-2 px-4 text-white hover:from-teal-500 hover:to-green-600"
             disabled={!blogId}
             onClick={handleJoinBlog}
           >
             Join Blog
           </button>
         </div>
-        <div className="block lg:hidden w-full">
+        <div className="block w-full lg:hidden">
           <button
-            className="w-max p-2 px-4 text-white bg-gradient-to-r from-teal-400 hover:from-teal-500 to-green-500 hover:to-green-600 rounded-3xl cursor-pointer"
+            className="w-max cursor-pointer rounded-3xl bg-gradient-to-r from-teal-400 to-green-500 p-2 px-4 text-white hover:from-teal-500 hover:to-green-600"
             onClick={handleCreateBLog}
           >
             Create New Blog
           </button>
         </div>
       </div>
-      <p className="m-2 px-4 w-full max-w-2xl text-left text-sm font-nunito text-gray-700">
+      <p className="m-2 w-full max-w-2xl px-4 text-left font-nunito text-sm text-gray-700">
         recent blogs
       </p>
-      <div className="w-full h-full lg:h-80 py-4 flex flex-col items-center space-y-2 overflow-y-scroll s_hide">
+      <div className="s_hide flex h-full w-full flex-col items-center space-y-2 overflow-y-scroll py-4 lg:h-80">
         {user?.sub ? (
           <Blogs userId={user?.sub} />
         ) : (
-          <div className="p-4 py-20 w-full max-w-2xl flex justify-center items-center bg-white rounded-xl shadow-md">
-            <p className="text-center text-xl font-nunito text-gray-800 bg-white rounded-xl">
+          <div className="flex w-full max-w-2xl items-center justify-center rounded-xl bg-white p-4 py-20 shadow-md">
+            <p className="rounded-xl bg-white text-center font-nunito text-xl text-gray-800">
               Log in <br></br> To see your Blogs
             </p>
           </div>
