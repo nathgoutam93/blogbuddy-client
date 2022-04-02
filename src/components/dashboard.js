@@ -26,16 +26,16 @@ export default function DashboardHome() {
   return (
     <>
       <div className="flex h-1/3 w-full flex-col items-center justify-center space-y-4 p-4 font-nunito">
-        <div className="relative flex w-full max-w-2xl space-y-2 rounded-3xl bg-white p-2 shadow-sm">
+        <div className="relative flex w-full max-w-2xl space-y-2 rounded-3xl bg-secondary-light p-2 shadow-sm dark:bg-secondary-dark">
           <input
             type="text"
             onChange={(e) => setBlogId(e.target.value)}
             value={blogId}
             placeholder="Blog ID"
-            className="flex-1 rounded-3xl p-2 px-4 outline-none"
+            className="flex-1 rounded-3xl p-2.5 px-4 outline-none dark:bg-secondary-dark dark:text-gray-100"
           />
           <button
-            className="absolute right-2 top-0 w-max cursor-pointer rounded-3xl bg-gradient-to-r from-teal-400 to-green-500 p-2 px-4 text-white hover:from-teal-500 hover:to-green-600"
+            className="btn-primary absolute right-2 top-0 w-max cursor-pointer rounded-3xl"
             disabled={!blogId}
             onClick={handleJoinBlog}
           >
@@ -44,14 +44,14 @@ export default function DashboardHome() {
         </div>
         <div className="block w-full lg:hidden">
           <button
-            className="w-max cursor-pointer rounded-3xl bg-gradient-to-r from-teal-400 to-green-500 p-2 px-4 text-white hover:from-teal-500 hover:to-green-600"
+            className="btn-primary w-max cursor-pointer rounded-3xl"
             onClick={handleCreateBLog}
           >
             Create New Blog
           </button>
         </div>
       </div>
-      <p className="m-2 w-full max-w-2xl px-4 text-left font-nunito text-sm text-gray-700">
+      <p className="m-2 w-full max-w-2xl px-4 text-left font-nunito text-sm text-gray-700 dark:text-gray-400">
         recent blogs
       </p>
       <div className="s_hide flex h-full w-full flex-col items-center space-y-2 overflow-y-scroll py-4 lg:h-80">

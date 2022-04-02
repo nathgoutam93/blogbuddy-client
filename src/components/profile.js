@@ -49,16 +49,18 @@ export default function Profile() {
   }, [devtoKey]);
 
   return (
-    <div className="flex w-full flex-col items-center justify-start lg:justify-center">
+    <div className="flex min-h-max w-full flex-col items-center justify-start lg:justify-center">
       <div className="flex flex-col items-center space-y-4 p-4 pt-10 lg:hidden">
         <img
           src={`https://avatars.dicebear.com/api/identicon/${username}.svg`}
           alt="Profile Pic"
           width={96}
           height={96}
-          className="rounded-xl border border-gray-200 shadow-md"
+          className="rounded-xl border border-gray-200 shadow-md dark:border-secondary-dark"
         />
-        <p className="font-nunito text-gray-600">@{username}</p>
+        <p className="font-nunito text-gray-600 dark:text-gray-400">
+          @{username}
+        </p>
       </div>
       <div className="my-4 flex w-full max-w-xl flex-col space-y-4 p-2 font-nunito">
         <InputField
@@ -67,7 +69,7 @@ export default function Profile() {
           onChange={setNewUsername}
         />
         <button
-          className="flex w-max cursor-pointer items-center rounded-3xl bg-gradient-to-r from-teal-400 to-green-500 p-2 px-4 text-white hover:from-teal-500 hover:to-green-600"
+          className="btn-primary"
           disabled={!newUsername || newUsername === username}
           onClick={handleUpdateUser}
         >
@@ -92,16 +94,16 @@ export default function Profile() {
           value={devtoKey}
           onChange={setDevtoKey}
         />
-        <p className="rounded-xl bg-gray-50 p-4 text-sm">
+        <p className="rounded-xl bg-gray-50 p-4 text-sm text-gray-900 dark:bg-secondary-dark dark:text-gray-100">
           Note: Access tokens are stored locally in the browser.
         </p>
       </div>
       <button
         onClick={() => logout({ returnTo: callbackURL })}
-        className="my-10 flex h-max w-max items-center justify-center space-x-2 rounded-3xl p-2 px-4 font-nunito text-xl text-gray-700 hover:bg-gray-100 hover:text-red-500 lg:hidden"
+        className="nav-primary my-6 hover:text-red-500 lg:hidden"
       >
         <IoExitOutline />
-        <span>Log out</span>
+        <span className="mb-1.5">Log out</span>
       </button>
     </div>
   );

@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 
 export default function InputField({ label, value, onChange }) {
   return (
-    <div className="relative w-full rounded-md bg-gray-200 p-2 pt-6">
+    <div className="relative w-full rounded-md bg-gray-200 p-2 pt-6 dark:bg-secondary-dark">
       <input
         type="text"
         name="name"
         required
-        className="peer h-full w-full border-b-2 border-gray-300 bg-gray-200 text-base text-gray-800 outline-none"
+        className="peer h-full w-full border-b-2 border-gray-300 bg-gray-200 text-base text-gray-800 outline-none dark:border-secondary-dark dark:bg-secondary-dark dark:text-gray-100"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />

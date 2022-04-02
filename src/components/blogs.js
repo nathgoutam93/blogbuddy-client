@@ -14,7 +14,7 @@ export default function Blogs() {
             <Link
               key={blog.id}
               to={`/blogs/${blog.id}`}
-              className="flex w-full max-w-2xl flex-col rounded-xl bg-white p-4 font-nunito text-gray-700 shadow-md"
+              className="flex w-full max-w-2xl flex-col rounded-xl bg-secondary-light p-4 font-nunito text-gray-700 shadow-md dark:bg-secondary-dark dark:text-white dark:shadow-black"
             >
               <p className="truncate text-xl">
                 {blog.blog_title || "No Title"}

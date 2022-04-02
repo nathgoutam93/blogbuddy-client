@@ -25,7 +25,7 @@ export default function Editor({
             e.target.style.height = "inherit";
             e.target.style.height = `${e.target.scrollHeight}px`;
           }}
-          className="mt-4 h-20 w-full resize-none overflow-hidden bg-white px-4 text-3xl outline-none"
+          className="mt-4 h-20 w-full resize-none overflow-hidden bg-primary-light px-4 text-3xl outline-none dark:bg-primary-dark dark:text-gray-100"
           readOnly={createdBy !== userData.userId}
           placeholder="Title"
           maxLength={150}
@@ -38,7 +38,7 @@ export default function Editor({
             e.target.style.height = "inherit";
             e.target.style.height = `${e.target.scrollHeight}px`;
           }}
-          className="my-4 h-16 w-full resize-none overflow-hidden bg-white px-4 text-2xl outline-none"
+          className="my-4 h-16 w-full resize-none overflow-hidden bg-primary-light px-4 text-2xl outline-none dark:bg-primary-dark dark:text-gray-100"
           readOnly={createdBy !== userData.userId}
           placeholder="Sub Title"
           maxLength={150}
