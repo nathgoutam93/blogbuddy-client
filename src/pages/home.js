@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDarkMode } from "../context/darkModeContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { v4 as uuidV4 } from "uuid";
 import { MdUpdate, MdOutlineVoiceChat, MdLightMode } from "react-icons/md";
 import { BsArrowUpRightCircle, BsFillMoonStarsFill } from "react-icons/bs";
-import { useDarkMode } from "../context/darkModeContext";
 
 export default function Home() {
   const { isLoading, loginWithRedirect } = useAuth0();
@@ -69,14 +69,20 @@ export default function Home() {
         </div>
       </header>
       <div className="flex flex-col items-center justify-center space-y-6 p-4 py-10">
-        <p className="font-nunito text-2xl text-gray-700 dark:text-gray-200">
+        <p
+          style={{ animationDelay: "200ms" }}
+          className="translate-y-full animate-enter-b font-nunito text-2xl text-gray-700 opacity-0 dark:text-gray-200"
+        >
           Effective <strong className="text-green-400">Real-time</strong>{" "}
           Co-blogging With{" "}
           <strong className="bg-gradient-to-r from-green-400 to-green-600 bg-clip-text font-milonga text-transparent">
             BlogBuddy
           </strong>
         </p>
-        <div className="relative flex w-full max-w-xl space-y-2 rounded-3xl  border border-gray-200 bg-secondary-light p-2 shadow-md dark:border-secondary-dark dark:bg-secondary-dark">
+        <div
+          style={{ animationDelay: "300ms" }}
+          className="relative flex w-full max-w-xl translate-y-full animate-enter-b space-y-2 rounded-3xl border  border-gray-200 bg-secondary-light p-2 opacity-0 shadow-md dark:border-secondary-dark dark:bg-secondary-dark"
+        >
           <input
             type="text"
             onChange={(e) => setBlogId(e.target.value)}

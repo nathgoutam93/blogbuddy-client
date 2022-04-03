@@ -11,7 +11,7 @@ export function useUser() {
   return useContext(UserContext);
 }
 
-export default function UserProvider({ children }) {
+export function UserProvider({ children }) {
   const { user, isloading, isAuthenticated, getAccessTokenSilently } =
     useAuth0();
   const [userData, setUserData] = useState({ username: "", userId: "" });

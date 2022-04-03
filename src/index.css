@@ -54,7 +54,7 @@
   }
 
   input:checked ~ .dot {
-    transform: translateX(100%);
+    @apply translate-x-full
   }
   input:checked ~ .block {
     @apply bg-green-400

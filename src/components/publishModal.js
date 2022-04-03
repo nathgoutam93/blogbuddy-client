@@ -67,7 +67,7 @@ export default function PublishModal({ blogTitle }) {
   };
 
   return (
-    <div className="dark:bg-secondary flex w-5/6 max-w-lg flex-col space-y-2 rounded-xl bg-gray-200 p-4 font-nunito">
+    <div className="flex w-5/6 max-w-lg flex-col space-y-2 rounded-xl bg-secondary-light p-4 font-nunito dark:bg-secondary-dark">
       <button
         onClick={(e) => {
           e.stopPropagation();

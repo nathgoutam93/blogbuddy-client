@@ -9,12 +9,13 @@ export default function Blogs() {
   return (
     <>
       {userBlogs.length ? (
-        userBlogs.map((blog) => {
+        userBlogs.map((blog, id) => {
           return (
             <Link
               key={blog.id}
               to={`/blogs/${blog.id}`}
-              className="flex w-full max-w-2xl flex-col rounded-xl bg-secondary-light p-4 font-nunito text-gray-700 shadow-md dark:bg-secondary-dark dark:text-white dark:shadow-black"
+              style={{ animationDelay: `${id * 100}ms` }}
+              className="flex w-full max-w-2xl translate-y-full animate-enter-b flex-col rounded-xl bg-secondary-light p-4 font-nunito text-gray-700 opacity-0 shadow-md dark:bg-secondary-dark dark:text-white dark:shadow-black"
             >
               <p className="truncate text-xl">
                 {blog.blog_title || "No Title"}

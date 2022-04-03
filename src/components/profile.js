@@ -1,10 +1,10 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect, useState } from "react";
-import { ImSpinner2 } from "react-icons/im";
+import { useAuth0 } from "@auth0/auth0-react";
 import { useUser } from "../context/userContext";
-import UpdateUser from "../utils/updateUser";
-import InputField from "./commons/inputField";
+import { ImSpinner2 } from "react-icons/im";
 import { IoExitOutline } from "react-icons/io5";
+import InputField from "./commons/inputField";
+import UpdateUser from "../utils/updateUser";
 
 const callbackURL = window.location.origin;
 
@@ -50,7 +50,7 @@ export default function Profile() {
 
   return (
     <div className="flex min-h-max w-full flex-col items-center justify-start lg:justify-center">
-      <div className="flex flex-col items-center space-y-4 p-4 pt-10 lg:hidden">
+      <div className="flex translate-y-full animate-enter-b flex-col items-center space-y-4 p-4 pt-10 opacity-0 lg:hidden">
         <img
           src={`https://avatars.dicebear.com/api/identicon/${username}.svg`}
           alt="Profile Pic"
@@ -62,14 +62,18 @@ export default function Profile() {
           @{username}
         </p>
       </div>
-      <div className="my-4 flex w-full max-w-xl flex-col space-y-4 p-2 font-nunito">
+      <div
+        style={{ animationDelay: "100ms" }}
+        className="my-4 flex w-full max-w-xl translate-y-full animate-enter-b flex-col space-y-4 p-2 font-nunito opacity-0"
+      >
         <InputField
           label="username"
           value={newUsername}
           onChange={setNewUsername}
         />
         <button
-          className="btn-primary"
+          style={{ animationDelay: "200ms" }}
+          className="btn-primary translate-y-full animate-enter-b opacity-0"
           disabled={!newUsername || newUsername === username}
           onClick={handleUpdateUser}
         >
@@ -83,7 +87,10 @@ export default function Profile() {
           )}
         </button>
       </div>
-      <div className="w-full max-w-xl space-y-4 p-2 font-nunito">
+      <div
+        style={{ animationDelay: "300ms" }}
+        className="w-full max-w-xl translate-y-full animate-enter-b space-y-4 p-2 font-nunito opacity-0"
+      >
         <InputField
           label="Hashnode Access Token"
           value={hashnodeKey}
@@ -94,13 +101,17 @@ export default function Profile() {
           value={devtoKey}
           onChange={setDevtoKey}
         />
-        <p className="rounded-xl bg-gray-50 p-4 text-sm text-gray-900 dark:bg-secondary-dark dark:text-gray-100">
+        <p
+          style={{ animationDelay: "400ms" }}
+          className="translate-y-full animate-enter-b rounded-xl bg-gray-50 p-4 text-sm text-gray-900 opacity-0 dark:bg-secondary-dark dark:text-gray-100"
+        >
           Note: Access tokens are stored locally in the browser.
         </p>
       </div>
       <button
+        style={{ animationDelay: "500ms" }}
         onClick={() => logout({ returnTo: callbackURL })}
-        className="nav-primary my-6 hover:text-red-500 lg:hidden"
+        className="nav-primary my-6 translate-y-full animate-enter-b opacity-0 hover:text-red-500 lg:hidden"
       >
         <IoExitOutline />
         <span className="mb-1.5">Log out</span>

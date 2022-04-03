@@ -58,7 +58,8 @@ export default function Blog() {
         let toggleFlagTimeout = 0;
 
         const handleNewUser = () => {
-          //send username to the peer to complete connection process and add peer to connections
+          // send username to the peer
+          // to complete connection process and add peer to connections
           conn.send({ type: "username", value: username });
           setDataConnections((previousState) => {
             previousState[conn.peer] = {
@@ -136,7 +137,8 @@ export default function Blog() {
         }
       });
 
-      //on dataConnection close remove the user from connection and the cursor associated with the peer
+      // on dataConnection close
+      // remove the user from connection and the cursor associated with the peer
       conn.on("close", () => {
         cursorModule.removeCursor(conn.peer);
         setMediaConnections((previousState) => {

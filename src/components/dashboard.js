@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Blogs from "../components/blogs";
+import { useUser } from "../context/userContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
+import Blogs from "../components/blogs";
 import CreateNewBlog from "../utils/createNewBlog";
-import { useUser } from "../context/userContext";
 
 export default function DashboardHome() {
   const { user, getAccessTokenSilently } = useAuth0();
@@ -26,7 +26,7 @@ export default function DashboardHome() {
   return (
     <>
       <div className="flex h-1/3 w-full flex-col items-center justify-center space-y-4 p-4 font-nunito">
-        <div className="relative flex w-full max-w-2xl space-y-2 rounded-3xl bg-secondary-light p-2 shadow-sm dark:bg-secondary-dark">
+        <div className="relative flex w-full max-w-2xl translate-y-full animate-enter-b space-y-2 rounded-3xl bg-secondary-light p-2 opacity-0 shadow-sm dark:bg-secondary-dark">
           <input
             type="text"
             onChange={(e) => setBlogId(e.target.value)}
@@ -42,7 +42,7 @@ export default function DashboardHome() {
             Join Blog
           </button>
         </div>
-        <div className="block w-full lg:hidden">
+        <div className="block w-full translate-y-full animate-enter-b opacity-0 lg:hidden">
           <button
             className="btn-primary w-max cursor-pointer rounded-3xl"
             onClick={handleCreateBLog}
@@ -51,7 +51,7 @@ export default function DashboardHome() {
           </button>
         </div>
       </div>
-      <p className="m-2 w-full max-w-2xl px-4 text-left font-nunito text-sm text-gray-700 dark:text-gray-400">
+      <p className="m-2 w-full max-w-2xl translate-y-full animate-enter-b px-4 text-left font-nunito text-sm text-gray-700 opacity-0 dark:text-gray-400">
         recent blogs
       </p>
       <div className="s_hide flex h-full w-full flex-col items-center space-y-2 overflow-y-scroll py-4 lg:h-80">

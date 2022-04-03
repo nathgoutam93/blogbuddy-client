@@ -1,11 +1,11 @@
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useUser } from "../context/userContext";
-import CreateNewBlog from "../utils/createNewBlog";
 import { IoHomeOutline, IoPersonOutline, IoExitOutline } from "react-icons/io5";
 import { useDarkMode } from "../context/darkModeContext";
 import { MdLightMode } from "react-icons/md";
 import { BsFillMoonStarsFill } from "react-icons/bs";
+import CreateNewBlog from "../utils/createNewBlog";
 
 export default function Dashboard() {
   const { user, isLoading, logout, getAccessTokenSilently } = useAuth0();
@@ -98,7 +98,7 @@ export default function Dashboard() {
           <span>Log out</span>
         </button>
       </header>
-      <div className="col-span-4 flex h-full flex-col items-center justify-evenly p-2">
+      <div className="col-span-4 flex h-full flex-col items-center justify-evenly overflow-hidden p-2">
         <Outlet />
       </div>
       <div className="col-span-1 hidden flex-col items-center space-y-4 p-4 pt-10  lg:flex">

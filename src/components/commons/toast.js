@@ -1,10 +1,10 @@
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import {
   HiOutlineInformationCircle,
   HiOutlineBadgeCheck
 } from "react-icons/hi";
 import { BiError } from "react-icons/bi";
+import PropTypes from "prop-types";
 
 export default function Toast({ show, type, message }) {
   const [color, setColor] = useState("#16de69");

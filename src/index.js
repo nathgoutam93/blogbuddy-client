@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { DarkModeProvider } from "./context/darkModeContext";
-import UserProvider from "./context/userContext";
+import { UserProvider } from "./context/userContext";
 import App from "./App";
 import "./index.css";
 

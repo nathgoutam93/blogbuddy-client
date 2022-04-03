@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { AiOutlineUserAdd, AiOutlineUser } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useUser } from "../context/userContext";
 import { ImSpinner2 } from "react-icons/im";
-import { AiOutlineFileMarkdown } from "react-icons/ai";
+import {
+  AiOutlineFileMarkdown,
+  AiOutlineUserAdd,
+  AiOutlineUser
+} from "react-icons/ai";
 import Toast from "./commons/toast";
 import PublishModal from "./publishModal";
 import PropTypes from "prop-types";

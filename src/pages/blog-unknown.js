@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { usePeer } from "../context/peerContext";
 import { useQuill } from "../context/quillContext";
+import { useUser } from "../context/userContext";
 import { useAuth0 } from "@auth0/auth0-react";
 import Header from "../components/header";
 import Editor from "../components/editor";
 import VideoContainer from "../components/videoContainer";
 import VideoContainerHorizontal from "../components/videoContainerHorizontal";
 import getActiveUsers from "../utils/getActiveUsers";
-import { useUser } from "../context/userContext";
+
 const { deltaToMarkdown } = require("quill-delta-to-markdown");
 
 export default function Blog() {
@@ -53,7 +54,8 @@ export default function Blog() {
         let toggleFlagTimeout = 0;
 
         const handleNewUser = () => {
-          //send username to the peer to complete connection process and add peer to connections
+          // send username to the peer
+          // to complete connection process and add peer to connections
           conn.send({ type: "username", value: username });
           setDataConnections((previousState) => {
             previousState[conn.peer] = {
@@ -131,7 +133,8 @@ export default function Blog() {
         }
       });
 
-      //on dataConnection close remove the user from connection and the cursor associated with the peer
+      // on dataConnection close
+      // remove the user from connection and the cursor associated with the peer
       conn.on("close", () => {
         cursorModule.removeCursor(conn.peer);
         setMediaConnections((previousState) => {
